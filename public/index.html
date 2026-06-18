@@ -6,237 +6,299 @@
 <title>FOMO Sydney — Event Discovery</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.6.0/dist/tabler-icons.min.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg: #f5f4f2;
+  --surface: #ffffff;
+  --surface2: #eeece9;
+  --surface3: #e5e3de;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.15);
+  --text: #1a1917;
+  --text2: #5a5754;
+  --text3: #9c9894;
+  --accent: #7c3aed;
+  --accent-bg: #ede9fe;
+  --hot: #dc2626;   --hot-bg: #fee2e2;
+  --rising: #d97706; --rising-bg: #fef3c7;
+  --steady: #16a34a; --steady-bg: #dcfce7;
+  --gold: #f59e0b;   --silver: #94a3b8; --bronze: #b45309;
+  --radius: 14px; --radius-sm: 8px;
+}
+@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #f9f8f6;
-    --surface: #ffffff;
-    --surface2: #f3f2ef;
-    --border: rgba(0,0,0,0.1);
-    --border2: rgba(0,0,0,0.18);
-    --text: #1a1a1a;
-    --text2: #555;
-    --text3: #999;
-    --accent: #7c3aed;
-    --accent-bg: #ede9fe;
-    --hot: #dc2626;
-    --hot-bg: #fee2e2;
-    --rising: #d97706;
-    --rising-bg: #fef3c7;
-    --steady: #16a34a;
-    --steady-bg: #dcfce7;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --bg: #111110; --surface: #1c1c1a; --surface2: #252523; --surface3: #2e2d2b;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8; --text2: #a09d98; --text3: #666;
+    --accent: #a78bfa; --accent-bg: #2e1f5e;
+    --hot: #f87171; --hot-bg: #450a0a;
+    --rising: #fbbf24; --rising-bg: #451a03;
+    --steady: #4ade80; --steady-bg: #052e16;
   }
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #111110;
-      --surface: #1c1c1a;
-      --surface2: #252523;
-      --border: rgba(255,255,255,0.09);
-      --border2: rgba(255,255,255,0.16);
-      --text: #f0ede8;
-      --text2: #a09d98;
-      --text3: #666;
-      --accent: #a78bfa;
-      --accent-bg: #2e1f5e;
-      --hot: #f87171;
-      --hot-bg: #450a0a;
-      --rising: #fbbf24;
-      --rising-bg: #451a03;
-      --steady: #4ade80;
-      --steady-bg: #052e16;
-    }
-  }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
 
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+.layout { max-width: 1240px; margin: 0 auto; padding: 0 1.25rem; }
 
-  .layout { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+/* ── Header ── */
+.header { padding: 1.25rem 0 1rem; border-bottom: 0.5px solid var(--border); margin-bottom: 1.5rem; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, #7c3aed, #db2777); display: flex; align-items: center; justify-content: center; }
+.brand-icon i { font-size: 18px; color: #fff; }
+.brand-name { font-size: 19px; font-weight: 700; letter-spacing: -0.4px; }
+.brand-sub { font-size: 11px; color: var(--text3); }
+.header-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text3); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.refresh-btn { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 13px; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .15s; }
+.refresh-btn:hover { background: var(--surface2); }
+.refresh-btn.spinning i { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Header ── */
-  .header { padding: 1.5rem 0 1.25rem; border-bottom: 0.5px solid var(--border); margin-bottom: 1.5rem; }
-  .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #db2777); display: flex; align-items: center; justify-content: center; }
-  .brand-icon i { font-size: 20px; color: #fff; }
-  .brand-name { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
-  .brand-sub { font-size: 12px; color: var(--text3); }
-  .header-meta { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text3); }
-  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .refresh-btn { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 13px; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
-  .refresh-btn:hover { background: var(--surface2); }
-  .refresh-btn.spinning i { animation: spin 1s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── Summary chips ── */
+.summary-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 1.25rem; }
+.summary-chip { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.chip-val { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+.chip-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
-  /* ── Summary chips ── */
-  .summary-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-  .summary-chip { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-  .chip-val { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; }
-  .chip-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+/* ── Toolbar ── */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; align-items: center; }
+.search-wrap { flex: 1; min-width: 180px; position: relative; }
+.search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--text3); }
+.search-input { width: 100%; padding: 7px 10px 7px 32px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 13px; outline: none; }
+.search-input:focus { border-color: var(--accent); }
+.toolbar-select { padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer; outline: none; }
 
-  /* ── Toolbar ── */
-  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem; align-items: center; }
-  .search-wrap { flex: 1; min-width: 200px; position: relative; }
-  .search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); }
-  .search-input { width: 100%; padding: 8px 12px 8px 34px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 14px; outline: none; }
-  .search-input:focus { border-color: var(--accent); }
-  .toolbar-select { padding: 8px 12px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer; outline: none; }
+/* ── Filters ── */
+.filters { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.25rem; }
+.filter-btn { font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); cursor: pointer; transition: all .12s; display: flex; align-items: center; gap: 4px; }
+.filter-btn:hover { background: var(--surface2); }
+.filter-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+.filter-btn .count { font-size: 10px; background: var(--surface2); border-radius: 10px; padding: 1px 5px; }
 
-  /* ── Filters ── */
-  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
-  .filter-btn { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.12s; display: flex; align-items: center; gap: 5px; }
-  .filter-btn:hover { background: var(--surface2); }
-  .filter-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); font-weight: 500; }
-  .filter-btn .count { font-size: 10px; background: var(--surface2); border-radius: 10px; padding: 1px 5px; }
+/* ══════════════════════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════════════════════ */
+.leaderboard { display: flex; flex-direction: column; gap: 10px; }
 
-  /* ── Events grid ── */
-  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+/* Hero (rank 1) */
+.lb-hero { }
 
-  /* ── Event card ── */
-  .event-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s, transform 0.15s; }
-  .event-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+/* Podium (ranks 2-3) */
+.lb-podium { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .card-image { width: 100%; height: 140px; object-fit: cover; background: var(--surface2); display: block; }
-  .card-image-placeholder { width: 100%; height: 100px; background: var(--surface2); display: flex; align-items: center; justify-content: center; }
-  .card-image-placeholder i { font-size: 28px; color: var(--text3); }
+/* Grid (ranks 4-9) */
+.lb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
 
-  .card-body { padding: 14px 16px; }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-  .event-name { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; }
-  .event-name a { color: inherit; text-decoration: none; }
-  .event-name a:hover { color: var(--accent); }
+/* List (ranks 10+) */
+.lb-list { display: flex; flex-direction: column; gap: 5px; }
 
-  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-  .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; }
-  .badge i { font-size: 11px; }
-  .badge-cat-music    { background: #ede9fe; color: #5b21b6; }
-  .badge-cat-food     { background: #fef3c7; color: #92400e; }
-  .badge-cat-art      { background: #fce7f3; color: #9d174d; }
-  .badge-cat-sport    { background: #dcfce7; color: #14532d; }
-  .badge-cat-market   { background: #e0f2fe; color: #0c4a6e; }
-  .badge-cat-film     { background: #f3e8ff; color: #6b21a8; }
-  .badge-cat-culture  { background: #ffedd5; color: #7c2d12; }
-  .badge-cat-wellness { background: #ecfdf5; color: #064e3b; }
-  .badge-cat-tech     { background: #eff6ff; color: #1e3a8a; }
-  .badge-cat-education { background: #fef9c3; color: #713f12; }
-  .badge-hot     { background: var(--hot-bg); color: var(--hot); }
-  .badge-rising  { background: var(--rising-bg); color: var(--rising); }
-  .badge-steady  { background: var(--steady-bg); color: var(--steady); }
-  .badge-free    { background: #f0fdf4; color: #15803d; }
-  .badge-source  { background: var(--surface2); color: var(--text3); font-size: 10px; }
+/* ── Cards ── */
+.event-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color .15s, transform .15s, box-shadow .15s;
+  position: relative;
+  cursor: default;
+}
+.event-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+.event-card.card-hero { display: flex; min-height: 220px; }
+.event-card.card-hero .card-image-wrap { width: 260px; min-height: 220px; flex-shrink: 0; overflow: hidden; }
+.event-card.card-hero .card-image { width: 100%; height: 220px; object-fit: cover; display: block; }
+.event-card.card-hero .card-image-placeholder { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.event-card.card-hero .card-image-placeholder i { font-size: 40px; color: var(--text3); }
+.event-card.card-hero .card-body { flex: 1; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
 
-  .card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px; margin-bottom: 10px; }
-  .meta-item { display: flex; align-items: flex-start; gap: 5px; font-size: 12px; color: var(--text2); }
-  .meta-item i { font-size: 13px; color: var(--text3); margin-top: 1px; flex-shrink: 0; }
-  .meta-item span { line-height: 1.3; }
-  .meta-full { grid-column: span 2; }
+.event-card.card-podium .card-image-wrap { height: 120px; }
+.event-card.card-podium .card-image { width: 100%; height: 120px; object-fit: cover; display: block; }
+.event-card.card-podium .card-image-placeholder { height: 120px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.event-card.card-podium .card-image-placeholder i { font-size: 28px; color: var(--text3); }
+.event-card.card-podium .card-body { padding: 14px 16px; }
 
-  .card-divider { border: none; border-top: 0.5px solid var(--border); margin: 10px 0; }
+.event-card.card-grid .card-image-wrap { height: 90px; }
+.event-card.card-grid .card-image { width: 100%; height: 90px; object-fit: cover; display: block; }
+.event-card.card-grid .card-image-placeholder { height: 90px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.event-card.card-grid .card-image-placeholder i { font-size: 22px; color: var(--text3); }
+.event-card.card-grid .card-body { padding: 10px 12px; }
 
-  /* ── Trend bar ── */
-  .trend-row { margin-bottom: 8px; }
-  .trend-header { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
-  .trend-score { font-weight: 600; color: var(--text2); }
-  .trend-bar-bg { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .trend-bar-fill { height: 100%; border-radius: 2px; }
+/* List card */
+.event-card.card-list { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); }
+.event-card.card-list .card-body { flex: 1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-  /* ── Sparkline ── */
-  .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 22px; margin-bottom: 10px; }
-  .spark-bar { width: 6px; border-radius: 1px; background: var(--border2); transition: background 0.2s; }
-  .spark-bar.lit { background: var(--accent); }
+/* ── Rank badge ── */
+.rank-badge {
+  position: absolute; top: 10px; left: 10px;
+  min-width: 28px; height: 28px; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px; z-index: 2; letter-spacing: -0.5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+.rank-1  { background: #f59e0b; color: #000; font-size: 14px; }
+.rank-2  { background: #94a3b8; color: #fff; }
+.rank-3  { background: #b45309; color: #fff; }
+.rank-n  { background: var(--surface2); color: var(--text2); font-size: 11px; }
 
-  /* ── Stats row ── */
-  .stats-row { display: flex; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
-  .stat { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text2); }
-  .stat strong { color: var(--text); font-weight: 600; }
-  .stat i { font-size: 13px; color: var(--text3); }
+/* Hero rank badge is larger */
+.card-hero .rank-badge { width: 36px; height: 36px; font-size: 16px; border-radius: 10px; top: 14px; left: 14px; }
 
-  /* ── Sentiment ── */
-  .sentiment-header { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
-  .sent-pos-label { color: var(--steady); font-weight: 600; }
-  .sentiment-bar { display: flex; height: 5px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
-  .sent-pos { background: #22c55e; }
-  .sent-neu { background: #d1d5db; }
-  .sent-neg { background: #f87171; }
-  .sent-legend { display: flex; gap: 10px; }
-  .sent-item { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); }
-  .sent-dot { width: 6px; height: 6px; border-radius: 50%; }
+/* List card rank badge — static, not absolute */
+.card-list .rank-badge { position: static; flex-shrink: 0; }
 
-  /* ── Comments ── */
-  .comments { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 10px; }
-  .comment { font-size: 12px; color: var(--text2); padding: 4px 0; border-bottom: 0.5px solid var(--border); display: flex; gap: 6px; align-items: flex-start; }
-  .comment:last-child { border-bottom: none; padding-bottom: 0; }
-  .comment-user { font-weight: 600; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+/* ── Score ring ── */
+.score-ring-wrap { display: flex; align-items: center; gap: 8px; }
+.score-ring {
+  width: 52px; height: 52px; flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800;
+  background: conic-gradient(var(--ring-color, var(--accent)) calc(var(--pct, 0) * 1%), var(--surface2) 0%);
+  position: relative;
+}
+.score-ring::after {
+  content: ''; position: absolute; inset: 6px;
+  border-radius: 50%; background: var(--surface);
+}
+.score-ring span { position: relative; z-index: 1; color: var(--text); }
+.score-ring-sm { width: 38px; height: 38px; font-size: 12px; }
+.score-ring-sm::after { inset: 5px; }
 
-  /* ── Sources section ── */
-  .card-sources { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.score-label { font-size: 10px; color: var(--text3); margin-top: 1px; text-align: center; }
 
-  /* ── Source status panel ── */
-  .source-panel { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-  .source-panel-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .source-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
-  .source-item { font-size: 11px; display: flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--surface2); color: var(--text2); }
-  .source-item.ok i { color: #22c55e; }
-  .source-item.fail i { color: var(--hot); }
-  .source-item.pending i { color: var(--text3); }
+/* ── Signal pills ── */
+.signals { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0; }
+.signal { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--surface2); color: var(--text2); display: inline-flex; align-items: center; gap: 3px; border: 0.5px solid var(--border); }
+.signal i { font-size: 11px; }
+.signal.sig-hot    { background: var(--hot-bg); color: var(--hot); border-color: transparent; }
+.signal.sig-reddit { background: #fff0e8; color: #c2410c; border-color: transparent; }
+.signal.sig-reddit.dark { background: #431407; color: #fb923c; }
+.signal.sig-new    { background: var(--accent-bg); color: var(--accent); border-color: transparent; }
 
-  /* ── Empty / loading ── */
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); }
-  .empty i { font-size: 36px; display: block; margin-bottom: 12px; }
-  .empty p { font-size: 14px; }
-  .loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
-  .skeleton { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); height: 360px; overflow: hidden; position: relative; }
-  .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, var(--surface2) 50%, transparent 100%); animation: shimmer 1.4s infinite; }
-  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+/* ── Event name + badges ── */
+.event-name { font-weight: 700; color: var(--text); line-height: 1.3; }
+.event-name a { color: inherit; text-decoration: none; }
+.event-name a:hover { color: var(--accent); }
+.card-hero .event-name  { font-size: 20px; }
+.card-podium .event-name { font-size: 16px; }
+.card-grid .event-name   { font-size: 14px; }
+.card-list .event-name   { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
 
-  /* ── Footer ── */
-  .footer { text-align: center; padding: 2rem 0; font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); margin-top: 2rem; }
+.badges { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+.badge { font-size: 11px; padding: 2px 7px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; }
+.badge i { font-size: 10px; }
+.badge-cat-music    { background: #ede9fe; color: #5b21b6; }
+.badge-cat-food     { background: #fef3c7; color: #92400e; }
+.badge-cat-art      { background: #fce7f3; color: #9d174d; }
+.badge-cat-sport    { background: #dcfce7; color: #14532d; }
+.badge-cat-market   { background: #e0f2fe; color: #0c4a6e; }
+.badge-cat-film     { background: #f3e8ff; color: #6b21a8; }
+.badge-cat-culture  { background: #ffedd5; color: #7c2d12; }
+.badge-cat-wellness { background: #ecfdf5; color: #064e3b; }
+.badge-cat-tech     { background: #eff6ff; color: #1e3a8a; }
+.badge-cat-education{ background: #fef9c3; color: #713f12; }
+.badge-hot    { background: var(--hot-bg); color: var(--hot); }
+.badge-rising { background: var(--rising-bg); color: var(--rising); }
+.badge-steady { background: var(--steady-bg); color: var(--steady); }
+.badge-free   { background: #f0fdf4; color: #15803d; }
+.badge-source { background: var(--surface2); color: var(--text3); font-size: 10px; }
 
-  /* ── Toggle source panel ── */
-  .toggle-sources { background: none; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 5px 10px; font-size: 12px; color: var(--text3); cursor: pointer; display: flex; align-items: center; gap: 5px; }
-  .toggle-sources:hover { background: var(--surface2); }
+/* ── Meta items ── */
+.card-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text2); margin: 4px 0; }
+.meta-item { display: flex; align-items: center; gap: 4px; }
+.meta-item i { font-size: 12px; color: var(--text3); flex-shrink: 0; }
 
-  @media (max-width: 600px) {
-    .events-grid { grid-template-columns: 1fr; }
-    .summary-row { grid-template-columns: repeat(2, 1fr); }
-  }
+/* ── Score bar ── */
+.score-bar-wrap { margin: 6px 0; }
+.score-bar-header { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 3px; }
+.score-bar-bg { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
+
+/* ── Sentiment (compact) ── */
+.sent-bar { display: flex; height: 3px; border-radius: 2px; overflow: hidden; margin: 4px 0; }
+.sent-pos { background: #22c55e; }
+.sent-neu { background: #d1d5db; }
+.sent-neg { background: #f87171; }
+
+/* ── Source tags ── */
+.card-sources { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ── Source panel ── */
+.source-panel { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.source-panel-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.source-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 5px; }
+.source-item { font-size: 11px; display: flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--surface2); color: var(--text2); }
+.source-item.ok i { color: #22c55e; }
+.source-item.fail i { color: var(--hot); }
+.source-item.pending i { color: var(--text3); }
+.toggle-sources { background: none; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 5px 10px; font-size: 12px; color: var(--text3); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.toggle-sources:hover { background: var(--surface2); }
+
+/* ── Empty / loading ── */
+.empty { text-align: center; padding: 3rem 1rem; color: var(--text3); }
+.empty i { font-size: 36px; display: block; margin-bottom: 12px; }
+.empty p { font-size: 14px; }
+.loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.skeleton { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); height: 280px; overflow: hidden; position: relative; }
+.skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,transparent 0%,var(--surface2) 50%,transparent 100%); animation: shimmer 1.4s infinite; }
+@keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+
+/* ── Leaderboard header ── */
+.lb-section-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin: 12px 0 6px; display: flex; align-items: center; gap: 6px; }
+.lb-section-label::after { content:''; flex:1; height:0.5px; background: var(--border2); }
+
+/* ── Rank change flash ── */
+@keyframes flash-up { 0%{background:rgba(34,197,94,.15)} 100%{background:transparent} }
+@keyframes flash-down { 0%{background:rgba(239,68,68,.1)} 100%{background:transparent} }
+.rank-up   { animation: flash-up   .8s ease; }
+.rank-down { animation: flash-down .8s ease; }
+
+/* ── Footer ── */
+.footer { text-align: center; padding: 2rem 0; font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); margin-top: 2rem; }
+
+@media (max-width: 640px) {
+  .lb-podium { grid-template-columns: 1fr; }
+  .lb-grid   { grid-template-columns: 1fr; }
+  .event-card.card-hero { flex-direction: column; }
+  .event-card.card-hero .card-image-wrap { width: 100%; height: 160px; }
+  .summary-row { grid-template-columns: repeat(3, 1fr); }
+}
 </style>
 </head>
 <body>
-
 <div class="layout">
 
   <!-- Header -->
   <header class="header">
     <div class="header-inner">
       <div class="brand">
-        <div class="brand-icon"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+        <div class="brand-icon"><i class="ti ti-map-pin"></i></div>
         <div>
           <div class="brand-name">FOMO Sydney</div>
-          <div class="brand-sub">Event discovery across 50 sources</div>
+          <div class="brand-sub">Social relevance leaderboard · 50 sources</div>
         </div>
       </div>
       <div class="header-meta">
         <span id="last-updated"><span class="live-dot"></span>Loading…</span>
         <button class="toggle-sources" id="toggle-sources-btn" aria-expanded="false">
-          <i class="ti ti-server" aria-hidden="true"></i>
+          <i class="ti ti-server"></i>
           <span id="source-count">50 sources</span>
         </button>
-        <button class="refresh-btn" id="refresh-btn" aria-label="Refresh events">
-          <i class="ti ti-refresh" aria-hidden="true"></i>
-          Refresh
+        <button class="refresh-btn" id="refresh-btn">
+          <i class="ti ti-refresh"></i>Refresh
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Source status panel (hidden by default) -->
-  <div class="source-panel" id="source-panel" style="display:none" aria-label="Source status">
+  <!-- Source panel -->
+  <div class="source-panel" id="source-panel" style="display:none">
     <div class="source-panel-title">
-      <i class="ti ti-plug" aria-hidden="true"></i>
-      Source status
+      <i class="ti ti-plug"></i>Source status
       <span id="sources-ok-count" style="margin-left:auto;font-weight:400;color:var(--text3)"></span>
     </div>
     <div class="source-grid" id="source-grid"></div>
@@ -255,350 +317,426 @@
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="search-wrap">
-      <i class="ti ti-search" aria-hidden="true"></i>
-      <input class="search-input" type="search" id="search-input" placeholder="Search events, venues, suburbs…" aria-label="Search events">
+      <i class="ti ti-search"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search events, venues, suburbs…">
     </div>
-    <select class="toolbar-select" id="sort-select" aria-label="Sort by">
-      <option value="trend">Sort: Activity trend</option>
+    <select class="toolbar-select" id="sort-select">
+      <option value="trend">Sort: Social relevance</option>
       <option value="talking">Sort: Most talked about</option>
       <option value="date">Sort: Upcoming first</option>
     </select>
-    <select class="toolbar-select" id="suburb-select" aria-label="Filter by suburb">
+    <select class="toolbar-select" id="suburb-select">
       <option value="">All suburbs</option>
     </select>
   </div>
 
-  <!-- Category filters -->
-  <div class="filters" id="filters" role="group" aria-label="Filter by category">
+  <!-- Filters -->
+  <div class="filters" id="filters">
     <button class="filter-btn active" data-cat="all">All <span class="count" id="cnt-all">…</span></button>
-    <button class="filter-btn" data-cat="music"><i class="ti ti-music" aria-hidden="true"></i>Music <span class="count" id="cnt-music">0</span></button>
-    <button class="filter-btn" data-cat="food"><i class="ti ti-chef-hat" aria-hidden="true"></i>Food &amp; drink <span class="count" id="cnt-food">0</span></button>
-    <button class="filter-btn" data-cat="art"><i class="ti ti-palette" aria-hidden="true"></i>Art <span class="count" id="cnt-art">0</span></button>
-    <button class="filter-btn" data-cat="market"><i class="ti ti-building-store" aria-hidden="true"></i>Markets <span class="count" id="cnt-market">0</span></button>
-    <button class="filter-btn" data-cat="sport"><i class="ti ti-run" aria-hidden="true"></i>Sport &amp; outdoors <span class="count" id="cnt-sport">0</span></button>
-    <button class="filter-btn" data-cat="film"><i class="ti ti-movie" aria-hidden="true"></i>Film <span class="count" id="cnt-film">0</span></button>
-    <button class="filter-btn" data-cat="culture"><i class="ti ti-masks-theater" aria-hidden="true"></i>Culture <span class="count" id="cnt-culture">0</span></button>
-    <button class="filter-btn" data-cat="wellness"><i class="ti ti-heart" aria-hidden="true"></i>Wellness <span class="count" id="cnt-wellness">0</span></button>
-    <button class="filter-btn" data-cat="tech"><i class="ti ti-cpu" aria-hidden="true"></i>Tech <span class="count" id="cnt-tech">0</span></button>
-    <button class="filter-btn" data-cat="education"><i class="ti ti-school" aria-hidden="true"></i>Workshops <span class="count" id="cnt-education">0</span></button>
+    <button class="filter-btn" data-cat="music"><i class="ti ti-music"></i>Music <span class="count" id="cnt-music">0</span></button>
+    <button class="filter-btn" data-cat="food"><i class="ti ti-chef-hat"></i>Food &amp; drink <span class="count" id="cnt-food">0</span></button>
+    <button class="filter-btn" data-cat="art"><i class="ti ti-palette"></i>Art <span class="count" id="cnt-art">0</span></button>
+    <button class="filter-btn" data-cat="market"><i class="ti ti-building-store"></i>Markets <span class="count" id="cnt-market">0</span></button>
+    <button class="filter-btn" data-cat="sport"><i class="ti ti-run"></i>Sport <span class="count" id="cnt-sport">0</span></button>
+    <button class="filter-btn" data-cat="film"><i class="ti ti-movie"></i>Film <span class="count" id="cnt-film">0</span></button>
+    <button class="filter-btn" data-cat="culture"><i class="ti ti-masks-theater"></i>Culture <span class="count" id="cnt-culture">0</span></button>
+    <button class="filter-btn" data-cat="wellness"><i class="ti ti-heart"></i>Wellness <span class="count" id="cnt-wellness">0</span></button>
+    <button class="filter-btn" data-cat="tech"><i class="ti ti-cpu"></i>Tech <span class="count" id="cnt-tech">0</span></button>
+    <button class="filter-btn" data-cat="education"><i class="ti ti-school"></i>Workshops <span class="count" id="cnt-education">0</span></button>
   </div>
 
-  <!-- Events grid -->
+  <!-- Leaderboard -->
   <div id="events-container">
     <div class="loading-grid" id="loading-grid">
-      ${[...Array(6)].map(() => '<div class="skeleton"></div>').join('')}
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
     </div>
-    <div class="events-grid" id="events-grid" style="display:none"></div>
+    <div id="leaderboard-wrap" style="display:none"></div>
     <div class="empty" id="empty-state" style="display:none">
-      <i class="ti ti-calendar-off" aria-hidden="true"></i>
+      <i class="ti ti-calendar-off"></i>
       <p id="empty-msg">No events found.</p>
     </div>
   </div>
 
   <footer class="footer">
-    FOMO Sydney — aggregating events across 50+ sources in real time.<br>
-    Data refreshes every 6 hours. Some sources require API keys — see <code>.env.example</code>.
+    FOMO Sydney · Social relevance powered by 50+ sources + Reddit · Refreshes every 6 hours
   </footer>
 </div>
 
 <script>
-const API = '';  // same origin
-
+const API = '';
 let state = {
-  allEvents: [],
-  cat: 'all',
-  sort: 'trend',
-  search: '',
-  suburb: '',
-  stats: null,
-  sources: [],
-  sourcePanelOpen: false,
+  allEvents: [], cat: 'all', sort: 'trend', search: '', suburb: '',
+  stats: null, sources: [], sourcePanelOpen: false,
+  prevRanks: new Map(), // id → rank, for change detection
 };
 
-// ─── Fetch helpers ─────────────────────────────────────────────────────────────
-async function fetchStats() {
-  try {
-    const r = await fetch(`${API}/api/stats`);
-    return await r.json();
-  } catch { return null; }
-}
-
-async function fetchSources() {
-  try {
-    const r = await fetch(`${API}/api/sources`);
-    const d = await r.json();
-    return d.sources || [];
-  } catch { return []; }
-}
-
+// ── Fetch ──────────────────────────────────────────────────────────────────────
+async function fetchStats()  { try { return await (await fetch(`${API}/api/stats`)).json(); } catch { return null; } }
+async function fetchSources(){ try { return (await (await fetch(`${API}/api/sources`)).json()).sources || []; } catch { return []; } }
 async function fetchEvents() {
-  const params = new URLSearchParams({ sort: state.sort, limit: 200 });
-  if (state.cat !== 'all') params.set('category', state.cat);
-  if (state.search) params.set('q', state.search);
-  if (state.suburb) params.set('suburb', state.suburb);
-  try {
-    const r = await fetch(`${API}/api/events?${params}`);
-    return await r.json();
-  } catch { return { events: [], total: 0 }; }
+  const p = new URLSearchParams({ sort: state.sort, limit: 200 });
+  if (state.cat !== 'all') p.set('category', state.cat);
+  if (state.search) p.set('q', state.search);
+  if (state.suburb) p.set('suburb', state.suburb);
+  try { return await (await fetch(`${API}/api/events?${p}`)).json(); } catch { return { events: [], total: 0 }; }
 }
 
-// ─── Render helpers ────────────────────────────────────────────────────────────
-function catBadge(cat) {
-  const icons = { music:'ti-music', food:'ti-chef-hat', art:'ti-palette', sport:'ti-run', market:'ti-building-store', film:'ti-movie', culture:'ti-masks-theater', wellness:'ti-heart', tech:'ti-cpu', education:'ti-school' };
-  const icon = icons[cat] || 'ti-tag';
-  const label = { music:'Music', food:'Food & drink', art:'Art', market:'Markets', sport:'Sport', film:'Film', culture:'Culture', wellness:'Wellness', tech:'Tech', education:'Workshop' }[cat] || cat;
-  return `<span class="badge badge-cat-${cat}"><i class="ti ${icon}" aria-hidden="true"></i>${label}</span>`;
-}
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function trendBadge(level, label) {
-  const icons = { hot: 'ti-flame', rising: 'ti-trending-up', steady: 'ti-minus' };
-  return `<span class="badge badge-${level}"><i class="ti ${icons[level] || 'ti-minus'}" aria-hidden="true"></i>${label || level}</span>`;
-}
-
-function sparkline(score, level) {
-  const heights = [2,2,3,3,4,5,6,7,8,9,10,10].map(h => Math.round(h * score / 100));
-  const color = { hot: '#dc2626', rising: '#d97706', steady: '#16a34a' }[level] || '#888';
-  return heights.map((h, i) => {
-    const isLit = i >= heights.length - Math.max(2, Math.floor(score / 15));
-    return `<div class="spark-bar${isLit ? ' lit' : ''}" style="height:${Math.max(3, h * 2.2)}px;${isLit ? `background:${color}` : ''}" aria-hidden="true"></div>`;
-  }).join('');
-}
-
-function formatDate(ev) {
+function fmtDate(ev) {
   const d = ev.date?.display || ev.date?.start;
   if (!d) return '';
   try {
-    if (typeof d === 'string' && d.length <= 12) {
-      return new Date(d + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
-    }
-    return new Date(d).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    const opts = { weekday:'short', day:'numeric', month:'short' };
+    if (typeof d === 'string' && d.length <= 12)
+      return new Date(d + 'T00:00:00').toLocaleDateString('en-AU', opts);
+    return new Date(d).toLocaleDateString('en-AU', opts);
   } catch { return d; }
 }
 
-function renderCard(ev) {
-  const date = formatDate(ev);
-  const location = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ') || '';
-  const hosts = ev.hosts?.slice(0, 2).join(', ') || '';
-  const talking = ev.talkingCount > 0 ? ev.talkingCount.toLocaleString() : '—';
-  const posts = ev.postCount > 0 ? ev.postCount.toLocaleString() : '—';
-  const sourceBadges = [...new Set((ev.sources || []).map(s => s.name))].slice(0, 3)
-    .map(s => `<span class="badge badge-source">${s}</span>`).join('');
+function fmtNum(n) {
+  if (!n || n === 0) return null;
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000)    return (n/1000).toFixed(1)+'k';
+  return String(n);
+}
 
-  const trendColor = { hot: '#dc2626', rising: '#d97706', steady: '#16a34a' }[ev.trendLevel] || '#888';
+function catBadge(cat) {
+  const icons  = { music:'ti-music', food:'ti-chef-hat', art:'ti-palette', sport:'ti-run', market:'ti-building-store', film:'ti-movie', culture:'ti-masks-theater', wellness:'ti-heart', tech:'ti-cpu', education:'ti-school' };
+  const labels = { music:'Music', food:'Food & drink', art:'Art', sport:'Sport', market:'Markets', film:'Film', culture:'Culture', wellness:'Wellness', tech:'Tech', education:'Workshop' };
+  return `<span class="badge badge-cat-${esc(cat)}"><i class="ti ${icons[cat]||'ti-tag'}"></i>${labels[cat]||cat}</span>`;
+}
 
-  const sent = ev.sentiment || { positive: 70, neutral: 25, negative: 5 };
-  const sentPos = Math.round(sent.positive || 70);
-  const sentNeu = Math.round(sent.neutral || 25);
-  const sentNeg = Math.round(sent.negative || 5);
+function trendBadge(level, label) {
+  const icons = { hot:'ti-flame', rising:'ti-trending-up', steady:'ti-minus' };
+  return `<span class="badge badge-${level}"><i class="ti ${icons[level]||'ti-minus'}"></i>${esc(label||level)}</span>`;
+}
 
-  const commentsHtml = (ev.comments || []).slice(0, 3).map(c =>
-    `<div class="comment"><span class="comment-user">${escHtml(c.user || 'user')}</span><span>${escHtml(c.text || '')}</span></div>`
-  ).join('');
+function rankBadge(rank, cls='') {
+  const rankCls = rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-n';
+  const icon    = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':null;
+  const label   = icon || `#${rank}`;
+  return `<div class="rank-badge ${rankCls} ${cls}">${label}</div>`;
+}
 
-  return `
-  <article class="event-card">
-    ${ev.imageUrl
-      ? `<img class="card-image" src="${escHtml(ev.imageUrl)}" alt="${escHtml(ev.name)}" loading="lazy" onerror="this.style.display='none'">`
-      : `<div class="card-image-placeholder"><i class="ti ti-calendar-event" aria-hidden="true"></i></div>`
-    }
+function scoreRing(score, size='') {
+  const pct   = Math.max(0, Math.min(100, score || 0));
+  const color = pct >= 70 ? '#16a34a' : pct >= 45 ? '#d97706' : '#6b7280';
+  return `<div class="score-ring ${size}" style="--pct:${pct};--ring-color:${color}"><span>${pct}</span></div>`;
+}
+
+function scoreBar(score, level) {
+  const color = { hot:'#dc2626', rising:'#d97706', steady:'#16a34a' }[level] || '#888';
+  return `<div class="score-bar-wrap">
+    <div class="score-bar-header"><span>Social relevance</span><span>${score}/100</span></div>
+    <div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${color}"></div></div>
+  </div>`;
+}
+
+function signalPills(ev) {
+  const sig    = ev.rawSignals || {};
+  const srcs   = ev.sourceCount || new Set((ev.sources||[]).map(s=>s.name)).size;
+  const talk   = fmtNum(ev.talkingCount);
+  const reddit = sig.redditMentions || 0;
+  const vel    = ev.velocityScore;
+  const rsvp   = fmtNum(sig.rsvpCount);
+
+  let pills = `<span class="signal"><i class="ti ti-database"></i>${srcs} source${srcs!==1?'s':''}</span>`;
+  if (talk)   pills += `<span class="signal"><i class="ti ti-users"></i>${talk} talking</span>`;
+  if (rsvp)   pills += `<span class="signal"><i class="ti ti-calendar-check"></i>${rsvp} going</span>`;
+  if (reddit > 0) pills += `<span class="signal sig-reddit"><i class="ti ti-brand-reddit"></i>${reddit} Reddit mention${reddit!==1?'s':''}</span>`;
+  if (vel > 0.4)  pills += `<span class="signal sig-new"><i class="ti ti-trending-up"></i>Trending</span>`;
+  if (ev.trendLevel === 'hot') pills += `<span class="signal sig-hot"><i class="ti ti-flame"></i>Hot</span>`;
+  return `<div class="signals">${pills}</div>`;
+}
+
+function sentBar(ev) {
+  const s = ev.sentiment || { positive:75, neutral:20, negative:5 };
+  return `<div class="sent-bar">
+    <div class="sent-pos" style="width:${s.positive||75}%"></div>
+    <div class="sent-neu" style="width:${s.neutral||20}%"></div>
+    <div class="sent-neg" style="width:${s.negative||5}%"></div>
+  </div>`;
+}
+
+function sourceTags(ev) {
+  const names = [...new Set((ev.sources||[]).map(s=>s.name))].slice(0,4);
+  return names.map(n=>`<span class="badge badge-source">${esc(n)}</span>`).join('');
+}
+
+// ── Card renderers ─────────────────────────────────────────────────────────────
+function heroCard(ev) {
+  const date = fmtDate(ev);
+  const loc  = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ');
+  const host = (ev.hosts||[]).slice(0,2).join(', ');
+
+  return `<article class="event-card card-hero" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
+    ${rankBadge(ev.socialRank)}
+    <div class="card-image-wrap">
+      ${validImg(ev.imageUrl)
+        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
+        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
+    </div>
     <div class="card-body">
-      <div class="card-top">
-        <h2 class="event-name">
-          ${ev.url
-            ? `<a href="${escHtml(ev.url)}" target="_blank" rel="noopener">${escHtml(ev.name)}</a>`
-            : escHtml(ev.name)
-          }
-        </h2>
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <div style="flex:1">
+          <h2 class="event-name" style="font-size:22px;margin-bottom:6px">
+            ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}
+          </h2>
+          <div class="badges">${catBadge(ev.category)}${trendBadge(ev.trendLevel, ev.trendLabel)}</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          ${scoreRing(ev.socialScore)}
+          <div class="score-label">Relevance</div>
+        </div>
       </div>
-      <div class="badges">
-        ${catBadge(ev.category)}
-        ${trendBadge(ev.trendLevel, ev.trendLabel)}
-        ${ev.isFree ? '<span class="badge badge-free"><i class="ti ti-ticket" aria-hidden="true"></i>Free</span>' : ''}
-      </div>
+      ${signalPills(ev)}
       <div class="card-meta">
-        ${date ? `<div class="meta-item"><i class="ti ti-calendar" aria-hidden="true"></i><span>${escHtml(date)}</span></div>` : ''}
-        ${location ? `<div class="meta-item"><i class="ti ti-map-pin" aria-hidden="true"></i><span>${escHtml(location)}</span></div>` : ''}
-        ${hosts ? `<div class="meta-item meta-full"><i class="ti ti-user" aria-hidden="true"></i><span>${escHtml(hosts)}</span></div>` : ''}
+        ${date ? `<div class="meta-item"><i class="ti ti-calendar"></i>${esc(date)}</div>` : ''}
+        ${loc  ? `<div class="meta-item"><i class="ti ti-map-pin"></i>${esc(loc)}</div>` : ''}
+        ${host ? `<div class="meta-item"><i class="ti ti-user"></i>${esc(host)}</div>` : ''}
+        ${ev.isFree ? `<div class="meta-item"><i class="ti ti-ticket"></i>Free</div>` : ''}
       </div>
-
-      <hr class="card-divider">
-
-      <div class="stats-row">
-        <div class="stat"><i class="ti ti-users" aria-hidden="true"></i><strong>${talking}</strong>&nbsp;talking</div>
-        <div class="stat"><i class="ti ti-photo" aria-hidden="true"></i><strong>${posts}</strong>&nbsp;posts</div>
-        <div class="stat"><i class="ti ti-database" aria-hidden="true"></i><strong>${ev.sourceCount || new Set((ev.sources||[]).map(s=>s.name)).size}</strong>&nbsp;sources</div>
-      </div>
-
-      <div class="trend-row">
-        <div class="trend-header"><span>Activity trend</span><span class="trend-score">${ev.trendScore}/100</span></div>
-        <div class="trend-bar-bg"><div class="trend-bar-fill" style="width:${ev.trendScore}%;background:${trendColor}"></div></div>
-      </div>
-      <div class="sparkline" aria-hidden="true">${sparkline(ev.trendScore, ev.trendLevel)}</div>
-
-      <div class="sentiment-header">
-        <span>Sentiment</span>
-        <span class="sent-pos-label">${sentPos}% positive</span>
-      </div>
-      <div class="sentiment-bar">
-        <div class="sent-pos" style="width:${sentPos}%"></div>
-        <div class="sent-neu" style="width:${sentNeu}%"></div>
-        <div class="sent-neg" style="width:${sentNeg}%"></div>
-      </div>
-      <div class="sent-legend">
-        <div class="sent-item"><div class="sent-dot" style="background:#22c55e"></div>${sentPos}% positive</div>
-        <div class="sent-item"><div class="sent-dot" style="background:#d1d5db"></div>${sentNeu}% neutral</div>
-        <div class="sent-item"><div class="sent-dot" style="background:#f87171"></div>${sentNeg}% negative</div>
-      </div>
-
-      ${commentsHtml ? `<hr class="card-divider"><div class="comments">${commentsHtml}</div>` : ''}
-
-      <div class="card-sources">${sourceBadges}</div>
+      ${sentBar(ev)}
+      <div class="card-sources">${sourceTags(ev)}</div>
     </div>
   </article>`;
 }
 
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function podiumCard(ev) {
+  const date = fmtDate(ev);
+  const loc  = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ');
+
+  return `<article class="event-card card-podium" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
+    ${rankBadge(ev.socialRank)}
+    <div class="card-image-wrap">
+      ${validImg(ev.imageUrl)
+        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
+        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px">
+        <h2 class="event-name" style="flex:1">${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}</h2>
+        <div style="text-align:center;flex-shrink:0">
+          ${scoreRing(ev.socialScore,'score-ring-sm')}
+          <div class="score-label">Rel.</div>
+        </div>
+      </div>
+      <div class="badges">${catBadge(ev.category)}${trendBadge(ev.trendLevel,ev.trendLabel)}</div>
+      ${signalPills(ev)}
+      <div class="card-meta">
+        ${date ? `<div class="meta-item"><i class="ti ti-calendar"></i>${esc(date)}</div>` : ''}
+        ${loc  ? `<div class="meta-item"><i class="ti ti-map-pin"></i>${esc(loc)}</div>` : ''}
+      </div>
+      ${sentBar(ev)}
+      <div class="card-sources">${sourceTags(ev)}</div>
+    </div>
+  </article>`;
 }
 
-// ─── Render events ─────────────────────────────────────────────────────────────
-function renderEvents(events) {
-  const grid = document.getElementById('events-grid');
-  const empty = document.getElementById('empty-state');
+function gridCard(ev) {
+  const date = fmtDate(ev);
+  const loc  = ev.location?.suburb || ev.location?.name || '';
+
+  return `<article class="event-card card-grid" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
+    ${rankBadge(ev.socialRank)}
+    <div class="card-image-wrap">
+      ${validImg(ev.imageUrl)
+        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
+        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:4px">
+        <h2 class="event-name" style="flex:1;font-size:13px">${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}</h2>
+      </div>
+      <div class="badges" style="margin-bottom:5px">${catBadge(ev.category)}</div>
+      ${scoreBar(ev.socialScore, ev.trendLevel)}
+      ${signalPills(ev)}
+      <div class="card-meta" style="margin-top:4px">
+        ${date ? `<div class="meta-item"><i class="ti ti-calendar"></i>${esc(date)}</div>` : ''}
+        ${loc  ? `<div class="meta-item"><i class="ti ti-map-pin"></i>${esc(loc)}</div>`  : ''}
+      </div>
+    </div>
+  </article>`;
+}
+
+function listRow(ev) {
+  const date = fmtDate(ev);
+  const pct  = ev.socialScore || 0;
+  const color= pct>=70?'#16a34a':pct>=45?'#d97706':'#6b7280';
+
+  return `<article class="event-card card-list" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
+    ${rankBadge(ev.socialRank, '')}
+    <div class="card-body">
+      <h2 class="event-name" style="flex:1">
+        ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}
+      </h2>
+      <div class="badges" style="flex-shrink:0">${catBadge(ev.category)}</div>
+      ${date ? `<div class="meta-item" style="flex-shrink:0;font-size:12px;color:var(--text2)"><i class="ti ti-calendar" style="font-size:12px;color:var(--text3)"></i>${esc(date)}</div>` : ''}
+    </div>
+    <div style="flex-shrink:0;font-size:13px;font-weight:700;color:${color};min-width:36px;text-align:right">${pct}</div>
+  </article>`;
+}
+
+// ── Image URL validator ────────────────────────────────────────────────────────
+function validImg(url) {
+  return url && typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
+}
+
+// ── Leaderboard render ─────────────────────────────────────────────────────────
+function renderLeaderboard(events) {
+  // Normalise events that were scored before the new algorithm (have trendScore but not socialScore)
+  events.forEach((ev, i) => {
+    if (!ev.socialScore) ev.socialScore = ev.trendScore || 0;
+    if (!ev.socialRank)  ev.socialRank  = i + 1;
+  });
+  const wrap    = document.getElementById('leaderboard-wrap');
+  const empty   = document.getElementById('empty-state');
   const loading = document.getElementById('loading-grid');
 
   loading.style.display = 'none';
 
   if (!events.length) {
-    grid.style.display = 'none';
+    wrap.style.display = 'none';
     empty.style.display = 'block';
     document.getElementById('empty-msg').textContent =
-      state.search ? `No events matching "${state.search}"` : 'No events found. The agent may still be crawling — try refreshing in a moment.';
+      state.search ? `No events matching "${state.search}"` : 'No events yet — the crawler may still be running. Try refreshing in a minute.';
     return;
   }
 
   empty.style.display = 'none';
-  grid.style.display = 'grid';
-  grid.innerHTML = events.map(renderCard).join('');
+  wrap.style.display = 'block';
+
+  // Record which IDs are at which positions before re-render (for rank-change animation)
+  const prevRanks = new Map();
+  wrap.querySelectorAll('[data-id]').forEach(el => {
+    prevRanks.set(el.dataset.id, parseInt(el.dataset.rank) || 999);
+  });
+
+  // Build leaderboard HTML
+  const hero    = events.slice(0, 1);
+  const podium  = events.slice(1, 3);
+  const grid    = events.slice(3, 9);
+  const list    = events.slice(9);
+
+  let html = '<div class="leaderboard">';
+
+  if (hero.length) {
+    html += `<div class="lb-section-label"><i class="ti ti-trophy" style="color:var(--gold)"></i>#1 Most Relevant</div>`;
+    html += `<div class="lb-hero">${hero.map(heroCard).join('')}</div>`;
+  }
+  if (podium.length) {
+    html += `<div class="lb-section-label"><i class="ti ti-medal" style="color:var(--silver)"></i>Top 3</div>`;
+    html += `<div class="lb-podium">${podium.map(podiumCard).join('')}</div>`;
+  }
+  if (grid.length) {
+    html += `<div class="lb-section-label"><i class="ti ti-layout-grid"></i>Rising</div>`;
+    html += `<div class="lb-grid">${grid.map(gridCard).join('')}</div>`;
+  }
+  if (list.length) {
+    html += `<div class="lb-section-label"><i class="ti ti-list"></i>All events</div>`;
+    html += `<div class="lb-list">${list.map(listRow).join('')}</div>`;
+  }
+  html += '</div>';
+
+  wrap.innerHTML = html;
+
+  // Animate rank changes
+  if (prevRanks.size > 0) {
+    wrap.querySelectorAll('[data-id]').forEach(el => {
+      const prev = prevRanks.get(el.dataset.id);
+      const curr = parseInt(el.dataset.rank);
+      if (prev && prev !== curr) {
+        el.classList.add(curr < prev ? 'rank-up' : 'rank-down');
+        setTimeout(() => el.classList.remove('rank-up','rank-down'), 900);
+      }
+    });
+  }
 }
 
-// ─── Render stats ──────────────────────────────────────────────────────────────
+// ── Stats render ───────────────────────────────────────────────────────────────
 function renderStats(stats, updatedAt) {
   if (stats) {
-    document.getElementById('s-total').textContent = (stats.totalEvents || 0).toLocaleString();
-    document.getElementById('s-talking').textContent = (stats.totalTalking || 0).toLocaleString();
-    document.getElementById('s-hot').textContent = (stats.hotCount || 0).toLocaleString();
-    document.getElementById('s-weekend').textContent = (stats.thisWeekend || 0).toLocaleString();
-    document.getElementById('s-free').textContent = (stats.freeCount || 0).toLocaleString();
-    document.getElementById('s-sources').textContent = `${stats.sources?.ok || 0}/${stats.sources?.total || 50}`;
-
-    // Update filter counts
-    const cats = stats.categories || {};
-    const total = stats.totalEvents || 0;
-    document.getElementById('cnt-all').textContent = total;
-    ['music','food','art','market','sport','film','culture','wellness','tech','education'].forEach(c => {
+    document.getElementById('s-total').textContent    = (stats.totalEvents||0).toLocaleString();
+    document.getElementById('s-talking').textContent  = fmtNum(stats.totalTalking) || '0';
+    document.getElementById('s-hot').textContent      = (stats.hotCount||0).toLocaleString();
+    document.getElementById('s-weekend').textContent  = (stats.thisWeekend||0).toLocaleString();
+    document.getElementById('s-free').textContent     = (stats.freeCount||0).toLocaleString();
+    document.getElementById('s-sources').textContent  = `${stats.sources?.ok||0}/${stats.sources?.total||50}`;
+    const cats = stats.categories||{};
+    document.getElementById('cnt-all').textContent = stats.totalEvents||0;
+    ['music','food','art','market','sport','film','culture','wellness','tech','education'].forEach(c=>{
       const el = document.getElementById(`cnt-${c}`);
-      if (el) el.textContent = cats[c] || 0;
+      if (el) el.textContent = cats[c]||0;
     });
-
-    // Populate suburb select
     if (stats.topSuburbs?.length) {
       const sel = document.getElementById('suburb-select');
       while (sel.options.length > 1) sel.remove(1);
-      stats.topSuburbs.forEach(([suburb]) => {
-        const opt = document.createElement('option');
-        opt.value = suburb;
-        opt.textContent = suburb;
-        sel.appendChild(opt);
+      stats.topSuburbs.forEach(([s]) => {
+        const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o);
       });
     }
   }
-
   if (updatedAt) {
-    const d = new Date(updatedAt);
-    const diff = Math.round((Date.now() - d) / 60000);
+    const diff = Math.round((Date.now() - new Date(updatedAt)) / 60000);
     const label = diff < 1 ? 'just now' : diff < 60 ? `${diff}m ago` : `${Math.round(diff/60)}h ago`;
-    document.getElementById('last-updated').innerHTML =
-      `<span class="live-dot"></span>Updated ${label}`;
+    document.getElementById('last-updated').innerHTML = `<span class="live-dot"></span>Updated ${label}`;
   }
 }
 
-// ─── Render source panel ───────────────────────────────────────────────────────
 function renderSources(sources) {
-  const grid = document.getElementById('source-grid');
-  const countEl = document.getElementById('sources-ok-count');
-  const ok = sources.filter(s => s.ok).length;
-  const total = sources.length;
-  countEl.textContent = `${ok}/${total} live`;
-  document.getElementById('source-count').textContent = `${total} sources`;
-
-  grid.innerHTML = sources.map(s => {
-    const cls = s.ok ? 'ok' : (s.ok === false ? 'fail' : 'pending');
-    const icon = s.ok ? 'ti-check' : (s.ok === false ? 'ti-x' : 'ti-clock');
-    const count = s.count != null ? ` (${s.count})` : '';
-    return `<div class="source-item ${cls}"><i class="ti ${icon}" aria-hidden="true"></i>${escHtml(s.name)}${count}</div>`;
+  const ok = sources.filter(s=>s.ok).length;
+  document.getElementById('sources-ok-count').textContent = `${ok}/${sources.length} live`;
+  document.getElementById('source-count').textContent = `${sources.length} sources`;
+  document.getElementById('source-grid').innerHTML = sources.map(s => {
+    const cls  = s.ok?'ok':(s.ok===false?'fail':'pending');
+    const icon = s.ok?'ti-check':(s.ok===false?'ti-x':'ti-clock');
+    return `<div class="source-item ${cls}"><i class="ti ${icon}"></i>${esc(s.name)}${s.count!=null?` (${s.count})`:''}</div>`;
   }).join('');
 }
 
-// ─── Load all data ─────────────────────────────────────────────────────────────
-async function load(showLoadingState = true) {
-  if (showLoadingState) {
+// ── Load ───────────────────────────────────────────────────────────────────────
+async function load(showLoading = true) {
+  if (showLoading) {
     document.getElementById('loading-grid').style.display = 'grid';
-    document.getElementById('events-grid').style.display = 'none';
+    document.getElementById('leaderboard-wrap').style.display = 'none';
     document.getElementById('empty-state').style.display = 'none';
   }
-
-  const [evData, stats, sources] = await Promise.all([
-    fetchEvents(),
-    fetchStats(),
-    fetchSources(),
-  ]);
-
+  const [evData, stats, sources] = await Promise.all([fetchEvents(), fetchStats(), fetchSources()]);
   state.allEvents = evData.events || [];
   state.stats = stats;
   state.sources = sources;
-
   renderStats(stats, evData.updatedAt);
-  renderEvents(state.allEvents);
+  renderLeaderboard(state.allEvents);
   if (sources.length) renderSources(sources);
 }
 
-// ─── Event listeners ───────────────────────────────────────────────────────────
+// ── Event listeners ────────────────────────────────────────────────────────────
 document.getElementById('filters').addEventListener('click', e => {
-  const btn = e.target.closest('[data-cat]');
-  if (!btn) return;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.cat = btn.dataset.cat;
-  load(false);
+  const btn = e.target.closest('[data-cat]'); if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); state.cat = btn.dataset.cat; load(false);
 });
-
-document.getElementById('sort-select').addEventListener('change', e => {
-  state.sort = e.target.value;
-  load(false);
-});
-
-document.getElementById('suburb-select').addEventListener('change', e => {
-  state.suburb = e.target.value;
-  load(false);
-});
-
+document.getElementById('sort-select').addEventListener('change', e => { state.sort = e.target.value; load(false); });
+document.getElementById('suburb-select').addEventListener('change', e => { state.suburb = e.target.value; load(false); });
 let searchTimer;
 document.getElementById('search-input').addEventListener('input', e => {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    state.search = e.target.value.trim();
-    load(false);
-  }, 300);
+  searchTimer = setTimeout(() => { state.search = e.target.value.trim(); load(false); }, 300);
 });
-
 document.getElementById('refresh-btn').addEventListener('click', async () => {
   const btn = document.getElementById('refresh-btn');
   btn.classList.add('spinning');
-  await load(true);
-  btn.classList.remove('spinning');
+  try {
+    await fetch(`${API}/api/crawl`, { method:'POST' });
+    await new Promise(r => setTimeout(r, 2000));
+    await load(true);
+  } finally {
+    btn.classList.remove('spinning');
+  }
 });
-
 document.getElementById('toggle-sources-btn').addEventListener('click', () => {
   state.sourcePanelOpen = !state.sourcePanelOpen;
   document.getElementById('source-panel').style.display = state.sourcePanelOpen ? 'block' : 'none';
@@ -606,10 +744,9 @@ document.getElementById('toggle-sources-btn').addEventListener('click', () => {
   if (state.sourcePanelOpen && state.sources.length) renderSources(state.sources);
 });
 
-// Auto-refresh every 5 minutes
+// Auto-refresh every 5 minutes (no loading spinner)
 setInterval(() => load(false), 5 * 60 * 1000);
 
-// Initial load
 load();
 </script>
 </body>

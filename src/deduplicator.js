@@ -11,6 +11,15 @@ function sameDay(d1, d2) {
   } catch { return false; }
 }
 
+function mergeSignals(a, b) {
+  const keys = ['rsvpCount','interestedCount','redditScore','redditComments','listingCount','capacity','ratingCount','likeCount'];
+  const result = { ...a };
+  for (const k of keys) {
+    result[k] = (a[k] || 0) + (b[k] || 0);
+  }
+  return result;
+}
+
 function deduplicate(events) {
   const merged = [];
 
@@ -25,16 +34,18 @@ function deduplicate(events) {
         (!ev.date?.start && !existing.date?.start);
 
       if (nameSim > 0.75 && dateMatch) {
-        // Merge: accumulate sources, pick highest talkingCount, union tags
         existing.sources.push(...ev.sources);
         existing.talkingCount = Math.max(existing.talkingCount, ev.talkingCount);
         existing.postCount = (existing.postCount || 0) + (ev.postCount || 0);
         existing.tags = [...new Set([...(existing.tags || []), ...(ev.tags || [])])];
+        // Accumulate all per-source signals
+        existing.rawSignals = mergeSignals(existing.rawSignals || {}, ev.rawSignals || {});
         if (!existing.imageUrl && ev.imageUrl) existing.imageUrl = ev.imageUrl;
         if (!existing.location.lat && ev.location?.lat) existing.location = ev.location;
         if ((ev.description || '').length > (existing.description || '').length) {
           existing.description = ev.description;
         }
+        if (!existing.hosts?.length && ev.hosts?.length) existing.hosts = ev.hosts;
         matched = true;
         break;
       }

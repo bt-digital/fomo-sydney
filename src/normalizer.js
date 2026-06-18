@@ -29,6 +29,18 @@ function normalize(raw, sourceName) {
 
   const category = raw.category || inferCategory(name + ' ' + (raw.description || ''));
 
+  // Extract per-source social signals — preserved separately so scorer can weight them
+  const rawSignals = {
+    rsvpCount:      raw.rsvpCount      || raw.yes_rsvp_count  || 0,
+    interestedCount:raw.interestedCount|| raw.interested_count|| 0,
+    redditScore:    raw.redditScore    || 0,
+    redditComments: raw.redditComments || 0,
+    listingCount:   raw.listingCount   || 0,   // SeatGeek / Ticketmaster demand
+    capacity:       raw.capacity       || 0,   // Eventbrite
+    ratingCount:    raw.ratingCount    || raw.user_ratings_total || 0, // Google/Yelp
+    likeCount:      raw.likeCount      || 0,
+  };
+
   return {
     id: uuidv4(),
     name,
@@ -42,7 +54,7 @@ function normalize(raw, sourceName) {
     location: {
       name: raw.venueName || raw.venue || '',
       address: raw.address || '',
-      suburb: raw.suburb || extractSuburb(raw.address || raw.venue || ''),
+      suburb: raw.suburb || extractSuburb(raw.address || raw.venueName || raw.venue || ''),
       lat: raw.lat || null,
       lng: raw.lng || null,
     },
@@ -54,8 +66,11 @@ function normalize(raw, sourceName) {
       url: raw.url || '',
       foundAt: new Date().toISOString(),
     }],
-    talkingCount: raw.talkingCount || raw.attendeeCount || raw.rsvpCount || 0,
+    // Aggregate engagement count (legacy field, kept for compat)
+    talkingCount: raw.talkingCount || raw.attendeeCount || rawSignals.rsvpCount || rawSignals.interestedCount || 0,
     postCount: raw.postCount || 0,
+    // Per-signal breakdown — accumulated by deduplicator and used by scorer
+    rawSignals,
     trendScore: 0,
     trendLevel: 'steady',
     sentiment: raw.sentiment || { positive: 75, neutral: 20, negative: 5 },

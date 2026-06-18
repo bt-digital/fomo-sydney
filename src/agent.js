@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const pLimit = require('p-limit');
 const Anthropic = require('@anthropic-ai/sdk');
 
@@ -113,6 +114,48 @@ Return JSON only: {"positive": number, "neutral": number, "negative": number} (m
   } catch { return { positive: 70, neutral: 25, negative: 5 }; }
 }
 
+// ─── Reddit mention scanner ────────────────────────────────────────────────────
+// Searches Sydney-focused subreddits for an event name to capture organic discussion.
+// Called for the top 30 events after main crawl — rate-limited to 3 concurrent.
+const redditLimit = pLimit(3);
+
+async function scanRedditMentions(eventName) {
+  try {
+    const words = eventName.split(/\s+/).slice(0, 4).join(' ');
+    const res = await axios.get('https://www.reddit.com/r/sydney+sydneymusic+sydneysocialclub+australia/search.json', {
+      params: { q: words, sort: 'relevance', t: 'month', limit: 10 },
+      headers: { 'User-Agent': 'FOMO-Sydney/1.0 (event discovery)' },
+      timeout: 7000,
+    });
+    const posts = (res.data?.data?.children || [])
+      .map(p => p.data)
+      .filter(p => p.title.toLowerCase().includes(words.split(' ')[0].toLowerCase()));
+    return {
+      redditMentions: posts.length,
+      redditScore:    posts.reduce((s, p) => s + (p.score || 0), 0),
+      redditComments: posts.reduce((s, p) => s + (p.num_comments || 0), 0),
+    };
+  } catch { return { redditMentions: 0, redditScore: 0, redditComments: 0 }; }
+}
+
+// ─── Velocity calculator ────────────────────────────────────────────────────────
+// Compares this crawl's source counts against the previous crawl.
+// Returns a 0–1 score: 1 = event doubled its sources since last crawl.
+function buildVelocityMap(previousEvents) {
+  const map = new Map();
+  for (const ev of (previousEvents || [])) {
+    map.set(ev.name?.toLowerCase().trim(), ev.sourceCount || 1);
+  }
+  return map;
+}
+
+function velocityScore(eventName, currentSourceCount, prevMap) {
+  const prev = prevMap.get(eventName?.toLowerCase().trim());
+  if (!prev) return 0.5; // newly discovered = moderate velocity
+  const growth = (currentSourceCount - prev) / Math.max(prev, 1);
+  return Math.max(0, Math.min(1, growth));
+}
+
 // ─── Main crawl function ───────────────────────────────────────────────────────
 async function crawl() {
   console.log(`[Agent] Starting crawl across ${SOURCES.length} sources — ${new Date().toISOString()}`);
@@ -146,8 +189,36 @@ async function crawl() {
   const deduped = deduplicate(allEvents);
   console.log(`[Agent] After deduplication: ${deduped.length}`);
 
+  // Load previous crawl for velocity calculation
+  const { loadEvents } = require('./store');
+  const prevData = await loadEvents().catch(() => null);
+  const prevMap  = buildVelocityMap(prevData?.events);
+
+  // Attach velocity scores before main scoring
+  for (const ev of deduped) {
+    const srcCount = new Set(ev.sources.map(s => s.name)).size;
+    ev.velocityScore = velocityScore(ev.name, srcCount, prevMap);
+  }
+
   // Score and rank
   const scored = scoreAll(deduped);
+
+  // Reddit mention scanning for top 30 events (rate-limited)
+  console.log('[Agent] Scanning Reddit mentions for top 30 events…');
+  await Promise.all(scored.slice(0, 30).map(ev =>
+    redditLimit(async () => {
+      const reddit = await scanRedditMentions(ev.name);
+      ev.rawSignals = { ...(ev.rawSignals || {}), ...reddit };
+      // Re-apply reddit signals to socialScore (lightweight re-score for these events)
+      if (reddit.redditMentions > 0) {
+        ev.socialScore = Math.min(100, ev.socialScore + reddit.redditMentions * 3 + Math.min(10, reddit.redditComments));
+        ev.trendScore  = ev.socialScore;
+        if (reddit.redditMentions >= 3) ev.trendLevel = 'hot';
+        else if (reddit.redditMentions >= 1 && ev.trendLevel === 'steady') ev.trendLevel = 'rising';
+      }
+    })
+  ));
+  console.log('[Agent] Reddit scanning complete');
 
   // LLM enrichment on top 20 events (rate-limit conscious)
   if (anthropic) {
@@ -157,6 +228,10 @@ async function crawl() {
       ev.sentiment = await llmSentiment(ev.name, ev.comments.map(c => c.text));
     }
   }
+
+  // Re-sort after Reddit enrichment
+  scored.sort((a, b) => b.socialScore - a.socialScore);
+  scored.forEach((ev, i) => { ev.socialRank = i + 1; });
 
   // Save results
   const output = {
