@@ -1,0 +1,37 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Scheduled crawl — every 6 hours
+[functions."scheduled-crawl"]
+  schedule = "0 */6 * * *"
+
+# API route rewrites → Netlify Functions
+[[redirects]]
+  from = "/api/events"
+  to = "/.netlify/functions/events"
+  status = 200
+
+[[redirects]]
+  from = "/api/stats"
+  to = "/.netlify/functions/stats"
+  status = 200
+
+[[redirects]]
+  from = "/api/sources"
+  to = "/.netlify/functions/sources"
+  status = 200
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+
+[[redirects]]
+  from = "/api/crawl"
+  to = "/.netlify/functions/crawl-background"
+  status = 200
+  force = true

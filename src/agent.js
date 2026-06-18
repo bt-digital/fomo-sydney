@@ -1,18 +1,14 @@
 require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
 const pLimit = require('p-limit');
 const Anthropic = require('@anthropic-ai/sdk');
 
 const { normalize } = require('./normalizer');
 const { deduplicate } = require('./deduplicator');
 const { scoreAll } = require('./scorer');
+const { saveEvents, saveState } = require('./store');
 
 const apiSources = require('./sources/apiSources');
 const scrapeSources = require('./sources/scrapeSources');
-
-const DATA_PATH = path.join(__dirname, '../data/events.json');
-const STATE_PATH = path.join(__dirname, '../data/state.json');
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
 
@@ -172,16 +168,13 @@ async function crawl() {
     events: scored,
   };
 
-  fs.mkdirSync(path.dirname(DATA_PATH), { recursive: true });
-  fs.writeFileSync(DATA_PATH, JSON.stringify(output, null, 2));
-
-  // Save state
-  fs.writeFileSync(STATE_PATH, JSON.stringify({
+  await saveEvents(output);
+  await saveState({
     lastCrawl: new Date().toISOString(),
     totalEvents: scored.length,
     sourcesOk: [...sourceResults.values()].filter(s => s.ok).length,
     sourcesFailed: [...sourceResults.values()].filter(s => !s.ok).length,
-  }, null, 2));
+  });
 
   console.log(`[Agent] Done. ${scored.length} events saved. ${[...sourceResults.values()].filter(s => s.ok).length}/${SOURCES.length} sources succeeded.`);
   return output;
