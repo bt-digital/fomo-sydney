@@ -70,10 +70,7 @@ const FETCH_MAP = {
   'Powerhouse Museum':   scrapeSources.fetchPowerhouse,
 
   // ── New booking platforms ─────────────────────────────────────────────────
-  'Moshtix p2':                  newSources.fetchMoshtixPage2,
-  'Moshtix p3':                  newSources.fetchMoshtixPage3,
-  'Moshtix p4':                  newSources.fetchMoshtixPage4,
-  'Moshtix p5':                  newSources.fetchMoshtixPage5,
+  'Moshtix All Pages':           newSources.fetchMoshtixAllPages,
   'OzTix':                       newSources.fetchOztix,
   'StickyTickets':               newSources.fetchStickyTickets,
   'Humanitix Sydney':            newSources.fetchHumanitixSydney,

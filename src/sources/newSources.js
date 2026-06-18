@@ -80,16 +80,33 @@ function scrapeHeadings($, baseUrl = '', venueName = '', defaults = {}) {
 // BOOKING PLATFORMS — HIGH VOLUME
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Moshtix multi-page (each page has 19 events with JSON-LD)
-async function fetchMoshtixPage(page) {
-  const html = await fetchHtml(`https://www.moshtix.com.au/v2/search?q=&state=NSW&page=${page}`);
-  return extractJsonLd(html).map(e => ({ ...e, url: e.url || `https://www.moshtix.com.au/v2/search?state=NSW` }));
+// Moshtix — fetch ALL events via their JSON API (1700+ events in a single call)
+async function fetchMoshtixAllPages() {
+  try {
+    const res = await axios.get('https://www.moshtix.com.au/v2/api/search', {
+      params: { q: '', state: 'NSW', page: 1 },
+      headers: { ...HEADERS, Accept: 'application/json' },
+      timeout: 20000,
+    });
+    const rawEvents = Object.values(res.data?.EventSearchResults || {});
+    return rawEvents.map(e => ({
+      name: e.Title,
+      startDate: e.StartDate,
+      dateDisplay: e.StartDateFormatted,
+      url: e.EventUrl || e.Url,
+      imageUrl: e.PhotoFileCustomUrl || e.PhotoFileUrl,
+      venueName: e.VenueName,
+      address: [e.Street1, e.Suburb, e.City].filter(Boolean).join(', '),
+      description: (e.Summary || e.Details || '').slice(0, 500),
+      category: (e.Genre || e.Category || '').toLowerCase().includes('music') ? 'music' : undefined,
+      isFree: e.FromPrice === 0,
+      price: e.FromPrice != null ? String(e.FromPrice) : null,
+    })).filter(e => e.name);
+  } catch (err) {
+    console.error('[Moshtix All Pages]', err.message);
+    return [];
+  }
 }
-
-async function fetchMoshtixPage2() { return fetchMoshtixPage(2); }
-async function fetchMoshtixPage3() { return fetchMoshtixPage(3); }
-async function fetchMoshtixPage4() { return fetchMoshtixPage(4); }
-async function fetchMoshtixPage5() { return fetchMoshtixPage(5); }
 
 // OzTix — scrape event cards
 async function fetchOztix() {
@@ -1396,10 +1413,7 @@ async function fetchMCAExpanded() {
 
 module.exports = {
   // Booking platforms
-  fetchMoshtixPage2,
-  fetchMoshtixPage3,
-  fetchMoshtixPage4,
-  fetchMoshtixPage5,
+  fetchMoshtixAllPages,
   fetchOztix,
   fetchStickyTickets,
   fetchHumanitixSydney,

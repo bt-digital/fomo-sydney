@@ -45,7 +45,7 @@ app.get('/api/events', async (req, res) => {
   }
 
   const page = parseInt(req.query.page) || 1;
-  const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+  const limit = Math.min(parseInt(req.query.limit) || 50, 500);
   const total = events.length;
   const paged = events.slice((page - 1) * limit, page * limit);
 

@@ -14,10 +14,7 @@ const SOURCES = [
 
   // ── Tier 2: Major listings platforms ────────────────────────────────────
   { name: 'Moshtix',                     tier: 2 },
-  { name: 'Moshtix p2',                  tier: 2 },
-  { name: 'Moshtix p3',                  tier: 2 },
-  { name: 'Moshtix p4',                  tier: 2 },
-  { name: 'Moshtix p5',                  tier: 2 },
+  { name: 'Moshtix All Pages',            tier: 2 },
   { name: 'Eventfinda',                  tier: 2 },
   { name: 'Eventfinda Sydney',           tier: 2 },
   { name: 'Eventbrite Sydney',           tier: 2 },
