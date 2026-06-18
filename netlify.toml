@@ -5,8 +5,9 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Scheduled crawl — every 6 hours
-[functions."scheduled-crawl"]
+# Scheduled background crawl — every 6 hours
+# Background suffix gives 15-minute timeout for the full 50-source crawl
+[functions."scheduled-crawl-background"]
   schedule = "0 */6 * * *"
 
 # API route rewrites → Netlify Functions
