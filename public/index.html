@@ -279,7 +279,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <div class="brand-icon"><i class="ti ti-map-pin"></i></div>
         <div>
           <div class="brand-name">FOMO Sydney</div>
-          <div class="brand-sub">Social relevance leaderboard · 50 sources</div>
+          <div class="brand-sub">Social relevance leaderboard · 150 sources</div>
         </div>
       </div>
       <div class="header-meta">
@@ -383,7 +383,12 @@ async function fetchEvents() {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function decodeHtml(s) {
+  const t = document.createElement('textarea');
+  t.innerHTML = s;
+  return t.value;
+}
+function esc(s) { const d = decodeHtml(String(s||'')); return d.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function fmtDate(ev) {
   const d = ev.date?.display || ev.date?.start;

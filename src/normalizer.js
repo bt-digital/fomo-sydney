@@ -23,8 +23,12 @@ function inferCategory(text) {
   return best.cat;
 }
 
+function decodeHtmlEntities(str) {
+  return (str || '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
+}
+
 function normalize(raw, sourceName) {
-  const name = (raw.name || raw.title || '').trim();
+  const name = decodeHtmlEntities((raw.name || raw.title || '').trim());
   if (!name) return null;
 
   const category = raw.category || inferCategory(name + ' ' + (raw.description || ''));

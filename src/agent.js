@@ -10,6 +10,8 @@ const { saveEvents, saveState } = require('./store');
 
 const apiSources = require('./sources/apiSources');
 const scrapeSources = require('./sources/scrapeSources');
+const newSources = require('./sources/newSources');
+const rssSources = require('./sources/rssSources');
 const { SOURCES: SOURCE_META } = require('./sources/registry');
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
@@ -66,6 +68,126 @@ const FETCH_MAP = {
   'Secret Sounds':       scrapeSources.fetchSecretSounds,
   'Sydney Comedy Store': scrapeSources.fetchComedyStore,
   'Powerhouse Museum':   scrapeSources.fetchPowerhouse,
+
+  // ── New booking platforms ─────────────────────────────────────────────────
+  'Moshtix p2':                  newSources.fetchMoshtixPage2,
+  'Moshtix p3':                  newSources.fetchMoshtixPage3,
+  'Moshtix p4':                  newSources.fetchMoshtixPage4,
+  'Moshtix p5':                  newSources.fetchMoshtixPage5,
+  'OzTix':                       newSources.fetchOztix,
+  'StickyTickets':               newSources.fetchStickyTickets,
+  'Humanitix Sydney':            newSources.fetchHumanitixSydney,
+  'TryBooking Sydney':           newSources.fetchTryBookingSydney,
+  'Eventbrite Sydney':           newSources.fetchEventbriteSydney,
+  'Eventfinda Sydney':           newSources.fetchEventfindaSydney,
+  'Peatix Sydney':               newSources.fetchPeatixSydney,
+  'Ticketek Events':             newSources.fetchTicketekEvents,
+
+  // ── New performing arts ───────────────────────────────────────────────────
+  'Belvoir St Theatre':          newSources.fetchBelvoir,
+  'Sydney Theatre Company':      newSources.fetchSydneyTheatreCompany,
+  'Griffin Theatre':             newSources.fetchGriffithTheatre,
+  'Ensemble Theatre':            newSources.fetchEnsembleTheatre,
+  'Hayes Theatre':               newSources.fetchHayesTheatre,
+  'State Theatre':               newSources.fetchStateTheatre,
+  'Old Fitzroy Theatre':         newSources.fetchOldFitzroyTheatre,
+  'Bangarra Dance Theatre':      newSources.fetchBangarra,
+  'Sydney Symphony Orchestra':   newSources.fetchSydneySymphony,
+  'Australian Chamber Orchestra':newSources.fetchAustralianChamberOrchestra,
+  'Monkey Baa Theatre':          newSources.fetchMonkeyBaa,
+  'The Concourse':               newSources.fetchConcourse,
+
+  // ── New music venues ──────────────────────────────────────────────────────
+  'Oxford Art Factory':          newSources.fetchOxfordArtFactory,
+  'Enmore Theatre Direct':       newSources.fetchEnmoreTheatreDirect,
+  'Metro Direct':                newSources.fetchMetroDirect,
+  'Hordern Direct':              newSources.fetchHordernDirect,
+  'Goodgod Direct':              newSources.fetchGoodGodDirect,
+  'Sweat It Out Direct':         newSources.fetchSweatItOutDirect,
+  'Secret Sounds Direct':        newSources.fetchSecretSoundsDirect,
+  'Manning Bar':                 newSources.fetchManningBar,
+  'Bald Faced Stag':             newSources.fetchBaldFacedStag,
+  'Marrickville Bowlo':          newSources.fetchMarrickvilleBowlo,
+  'The Vanguard':                newSources.fetchVanguardSydney,
+  'Old 505':                     newSources.fetchOld505,
+  'Imperial Hotel':              newSources.fetchImperialHotel,
+  'Sofar Sounds':                newSources.fetchSofar,
+  'Factory Theatre':             newSources.fetchFactoryDirect,
+
+  // ── New museums & galleries ───────────────────────────────────────────────
+  'Australian Museum':           newSources.fetchAustralianMuseum,
+  'Sydney Living Museums':       newSources.fetchSydneyLivingMuseums,
+  'Taronga Zoo':                 newSources.fetchTarongaZoo,
+  'State Library NSW':           newSources.fetchStateLibraryNSW,
+  'White Rabbit Gallery':        newSources.fetchWhiteRabbitGallery,
+  'Campbelltown Arts Centre':    newSources.fetchCampbelltownArts,
+  'Casula Powerhouse':           newSources.fetchCasulaArts,
+  'Hazelhurst Arts Centre':      newSources.fetchHazelhurst,
+  'Penrith Regional Gallery':    newSources.fetchPenrithGallery,
+  '4A Contemporary Asian Art':   newSources.fetchCentre4A,
+  'MCA Expanded':                newSources.fetchMCAExpanded,
+  'Sydney Opera House Expanded': newSources.fetchSydneyOperaHouseExpanded,
+
+  // ── New markets ───────────────────────────────────────────────────────────
+  'Marrickville Organic Market': newSources.fetchMarrickvilleOrganicMarket,
+  'Kirribilli Markets':          newSources.fetchKirribillMarkets,
+  'Balmain Market':              newSources.fetchBalmainMarket,
+  'Manly Markets':               newSources.fetchManlyMarkets,
+  'Eveleigh Market':             newSources.fetchEveleighMarket,
+  'Rozelle Markets':             newSources.fetchRozelleMarkets,
+  'Orange Grove Market':         newSources.fetchOrangeGroveMarket,
+
+  // ── New councils ──────────────────────────────────────────────────────────
+  'Waverley Council':            newSources.fetchWaverleyCouncil,
+  'Inner West Council':          newSources.fetchInnerWestCouncil,
+  'North Sydney Council':        newSources.fetchNorthSydneyCouncil,
+  'Willoughby Council':          newSources.fetchWilloughbyCouncil,
+  'Randwick Council':            newSources.fetchRandwickCouncil,
+  'Northern Beaches Council':    newSources.fetchNorthernBeachesCouncil,
+  'City of Parramatta':          newSources.fetchParramattaCouncil,
+  'Bayside Council':             newSources.fetchBaysideCouncil,
+  'Sutherland Shire':            newSources.fetchSutherlandCouncil,
+  'Ku-ring-gai Council':         newSources.fetchKuringgaiCouncil,
+
+  // ── New festivals ─────────────────────────────────────────────────────────
+  'Sydney Film Festival':        newSources.fetchSydneyFilmFestival,
+  'Sydney Comedy Festival':      newSources.fetchSydneyComedyFestival,
+  'Sydney Fringe':               newSources.fetchSydneyFringe,
+  'Sculpture by the Sea':        newSources.fetchSculptureByTheSea,
+  'Night Noodle Markets':        newSources.fetchNightNoodleMarkets,
+  'Roar and Snore':              newSources.fetchRoarAndSnore,
+  'Laneway Festival':            newSources.fetchLanewayFestival,
+
+  // ── Sport ─────────────────────────────────────────────────────────────────
+  'City2Surf':                   newSources.fetchCity2Surf,
+  'Sydney Running Festival':     newSources.fetchSydneyRunning,
+
+  // ── Other expanded ────────────────────────────────────────────────────────
+  'WeTeachMe Expanded':          newSources.fetchWeTeachMeExpanded,
+  'Destination NSW Expanded':    newSources.fetchDestinationNSWExpanded,
+  'NSW Government Expanded':     newSources.fetchNSWGovExpanded,
+  'Discover Parramatta':         newSources.fetchDiscoverParramatta,
+  'Airbnb Experiences Sydney':   newSources.fetchAirbnbExperiencesSydney,
+  'Resident Advisor Scrape':     newSources.fetchResidentAdvisorScrape,
+  'Dice FM Sydney':              newSources.fetchDiceFmSydney,
+
+  // ── RSS sources ───────────────────────────────────────────────────────────
+  'Concrete Playground RSS':        rssSources.fetchConcretePlaygroundRSS,
+  'Concrete Playground Events RSS': rssSources.fetchConcretePlaygroundEventsRSS,
+  'TimeOut Sydney RSS':             rssSources.fetchTimeOutRSS,
+  'TimeOut Food RSS':               rssSources.fetchTimeOutFoodRSS,
+  'Broadsheet RSS':                 rssSources.fetchBroadsheetRSS,
+  'Happy Mag':                      rssSources.fetchHappyMagRSS,
+  'Stoney Roads':                   rssSources.fetchStoneyRoadsRSS,
+  'The Music RSS':                  rssSources.fetchTheMusicRSS,
+  'Music NSW':                      rssSources.fetchMusicNSWRSS,
+  'FBi Radio':                      rssSources.fetchFBiRadioRSS,
+  'Inner West RSS':                 rssSources.fetchInnerWestRSS,
+  'City of Sydney RSS':             rssSources.fetchCityOfSydneyRSS,
+  'Waverley Council RSS':           rssSources.fetchWaverleyRSS,
+  'Limelight Magazine':             rssSources.fetchLimelightRSS,
+  'Artshub':                        rssSources.fetchArtshubRSS,
+  'Daily Review':                   rssSources.fetchDailyReviewRSS,
 };
 
 const SOURCES = SOURCE_META.map(s => ({ ...s, fetch: FETCH_MAP[s.name] }));

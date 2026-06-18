@@ -4,7 +4,7 @@
 function daysUntil(dateStr) {
   if (!dateStr) return 999;
   try {
-    return Math.max(0, (new Date(dateStr) - Date.now()) / 86400000);
+    return (new Date(dateStr) - Date.now()) / 86400000;
   } catch { return 999; }
 }
 
@@ -49,7 +49,8 @@ function rawSocialScore(ev) {
   // ── 4. Time urgency ─────────────────────────────────────────────────────────
   const days = daysUntil(ev.date?.start);
   let urgency = 0;
-  if      (days <= 1)  urgency = 28;
+  if      (days < 0)   urgency = -30; // past events buried
+  else if (days <= 1)  urgency = 28;
   else if (days <= 3)  urgency = 22;
   else if (days <= 7)  urgency = 15;
   else if (days <= 14) urgency = 8;
