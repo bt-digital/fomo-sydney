@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOMO Sydney — Event Discovery</title>
+<title>FOMO Sydney — What's On</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.6.0/dist/tabler-icons.min.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +40,7 @@
 
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
 
-.layout { max-width: 1240px; margin: 0 auto; padding: 0 1.25rem; }
+.layout { max-width: 860px; margin: 0 auto; padding: 0 1.25rem; }
 
 /* ── Header ── */
 .header { padding: 1.25rem 0 1rem; border-bottom: 0.5px solid var(--border); margin-bottom: 1.5rem; }
@@ -80,21 +80,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .filter-btn .count { font-size: 10px; background: var(--surface2); border-radius: 10px; padding: 1px 5px; }
 
 /* ══════════════════════════════════════════════════════
-   LEADERBOARD
+   LEADERBOARD — all full width
 ══════════════════════════════════════════════════════ */
 .leaderboard { display: flex; flex-direction: column; gap: 10px; }
-
-/* Hero (rank 1) */
-.lb-hero { }
-
-/* Podium (ranks 2-3) */
-.lb-podium { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-/* Grid (ranks 4-9) */
-.lb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
-
-/* List (ranks 10+) */
-.lb-list { display: flex; flex-direction: column; gap: 5px; }
+.lb-hero     { display: flex; flex-direction: column; gap: 10px; }
+.lb-featured { display: flex; flex-direction: column; gap: 8px; }
+.lb-list     { display: flex; flex-direction: column; gap: 5px; }
 
 /* ── Cards ── */
 .event-card {
@@ -107,28 +98,30 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   cursor: default;
 }
 .event-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
-.event-card.card-hero { display: flex; min-height: 220px; }
-.event-card.card-hero .card-image-wrap { width: 260px; min-height: 220px; flex-shrink: 0; overflow: hidden; }
-.event-card.card-hero .card-image { width: 100%; height: 220px; object-fit: cover; display: block; }
-.event-card.card-hero .card-image-placeholder { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
-.event-card.card-hero .card-image-placeholder i { font-size: 40px; color: var(--text3); }
-.event-card.card-hero .card-body { flex: 1; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
 
-.event-card.card-podium .card-image-wrap { height: 120px; }
-.event-card.card-podium .card-image { width: 100%; height: 120px; object-fit: cover; display: block; }
-.event-card.card-podium .card-image-placeholder { height: 120px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
-.event-card.card-podium .card-image-placeholder i { font-size: 28px; color: var(--text3); }
-.event-card.card-podium .card-body { padding: 14px 16px; }
+/* Hero card — full width, large landscape image */
+.event-card.card-hero { display: flex; min-height: 240px; }
+.event-card.card-hero .card-image-wrap { width: 300px; min-height: 240px; flex-shrink: 0; overflow: hidden; }
+.event-card.card-hero .card-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.event-card.card-hero .card-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.event-card.card-hero .card-image-placeholder i { font-size: 48px; color: var(--text3); }
+.event-card.card-hero .card-body { flex: 1; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px; }
 
-.event-card.card-grid .card-image-wrap { height: 90px; }
-.event-card.card-grid .card-image { width: 100%; height: 90px; object-fit: cover; display: block; }
-.event-card.card-grid .card-image-placeholder { height: 90px; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
-.event-card.card-grid .card-image-placeholder i { font-size: 22px; color: var(--text3); }
-.event-card.card-grid .card-body { padding: 10px 12px; }
+/* Featured card — full width, medium horizontal */
+.event-card.card-featured { display: flex; min-height: 140px; }
+.event-card.card-featured .card-image-wrap { width: 180px; min-height: 140px; flex-shrink: 0; overflow: hidden; }
+.event-card.card-featured .card-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.event-card.card-featured .card-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.event-card.card-featured .card-image-placeholder i { font-size: 32px; color: var(--text3); }
+.event-card.card-featured .card-body { flex: 1; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; }
 
-/* List card */
+/* List card — full width, compact with thumbnail */
 .event-card.card-list { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); }
-.event-card.card-list .card-body { flex: 1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.card-list .card-thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.card-list .card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-list .card-thumb-placeholder { width: 52px; height: 52px; background: var(--surface2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card-list .card-thumb-placeholder i { font-size: 18px; color: var(--text3); }
+.event-card.card-list .card-body { flex: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
 
 /* ── Rank badge ── */
 .rank-badge {
@@ -143,15 +136,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .rank-2  { background: #94a3b8; color: #fff; }
 .rank-3  { background: #b45309; color: #fff; }
 .rank-n  { background: var(--surface2); color: var(--text2); font-size: 11px; }
-
-/* Hero rank badge is larger */
-.card-hero .rank-badge { width: 36px; height: 36px; font-size: 16px; border-radius: 10px; top: 14px; left: 14px; }
-
-/* List card rank badge — static, not absolute */
+.card-hero .rank-badge { width: 40px; height: 40px; font-size: 18px; border-radius: 10px; top: 14px; left: 14px; }
 .card-list .rank-badge { position: static; flex-shrink: 0; }
 
 /* ── Score ring ── */
-.score-ring-wrap { display: flex; align-items: center; gap: 8px; }
 .score-ring {
   width: 52px; height: 52px; flex-shrink: 0;
   border-radius: 50%;
@@ -160,47 +148,38 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   background: conic-gradient(var(--ring-color, var(--accent)) calc(var(--pct, 0) * 1%), var(--surface2) 0%);
   position: relative;
 }
-.score-ring::after {
-  content: ''; position: absolute; inset: 6px;
-  border-radius: 50%; background: var(--surface);
-}
+.score-ring::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: var(--surface); }
 .score-ring span { position: relative; z-index: 1; color: var(--text); }
-.score-ring-sm { width: 38px; height: 38px; font-size: 12px; }
+.score-ring-sm { width: 40px; height: 40px; font-size: 13px; }
 .score-ring-sm::after { inset: 5px; }
-
 .score-label { font-size: 10px; color: var(--text3); margin-top: 1px; text-align: center; }
 
 /* ── Signal pills ── */
-.signals { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0; }
+.signals { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 0; }
 .signal { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--surface2); color: var(--text2); display: inline-flex; align-items: center; gap: 3px; border: 0.5px solid var(--border); }
 .signal i { font-size: 11px; }
 .signal.sig-hot    { background: var(--hot-bg); color: var(--hot); border-color: transparent; }
 .signal.sig-reddit { background: #fff0e8; color: #c2410c; border-color: transparent; }
-.signal.sig-reddit.dark { background: #431407; color: #fb923c; }
 .signal.sig-new    { background: var(--accent-bg); color: var(--accent); border-color: transparent; }
 
-/* ── Event name + badges ── */
+/* ── Event name ── */
 .event-name { font-weight: 700; color: var(--text); line-height: 1.3; }
 .event-name a { color: inherit; text-decoration: none; }
 .event-name a:hover { color: var(--accent); }
-.card-hero .event-name  { font-size: 20px; }
-.card-podium .event-name { font-size: 16px; }
-.card-grid .event-name   { font-size: 14px; }
-.card-list .event-name   { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+.card-hero .event-name     { font-size: 22px; }
+.card-featured .event-name { font-size: 16px; }
+.card-list .event-name     { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 340px; }
 
-.badges { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+/* ── Badges ── */
+.badges { display: flex; flex-wrap: wrap; gap: 4px; margin: 3px 0; }
 .badge { font-size: 11px; padding: 2px 7px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; }
 .badge i { font-size: 10px; }
-.badge-cat-music    { background: #ede9fe; color: #5b21b6; }
-.badge-cat-food     { background: #fef3c7; color: #92400e; }
-.badge-cat-art      { background: #fce7f3; color: #9d174d; }
-.badge-cat-sport    { background: #dcfce7; color: #14532d; }
-.badge-cat-market   { background: #e0f2fe; color: #0c4a6e; }
-.badge-cat-film     { background: #f3e8ff; color: #6b21a8; }
-.badge-cat-culture  { background: #ffedd5; color: #7c2d12; }
-.badge-cat-wellness { background: #ecfdf5; color: #064e3b; }
-.badge-cat-tech     { background: #eff6ff; color: #1e3a8a; }
-.badge-cat-education{ background: #fef9c3; color: #713f12; }
+.badge-cat-music   { background: #ede9fe; color: #5b21b6; }
+.badge-cat-food    { background: #fef3c7; color: #92400e; }
+.badge-cat-art     { background: #fce7f3; color: #9d174d; }
+.badge-cat-market  { background: #e0f2fe; color: #0c4a6e; }
+.badge-cat-film    { background: #f3e8ff; color: #6b21a8; }
+.badge-cat-culture { background: #ffedd5; color: #7c2d12; }
 .badge-hot    { background: var(--hot-bg); color: var(--hot); }
 .badge-rising { background: var(--rising-bg); color: var(--rising); }
 .badge-steady { background: var(--steady-bg); color: var(--steady); }
@@ -208,24 +187,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .badge-source { background: var(--surface2); color: var(--text3); font-size: 10px; }
 
 /* ── Meta items ── */
-.card-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text2); margin: 4px 0; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text2); margin: 2px 0; }
 .meta-item { display: flex; align-items: center; gap: 4px; }
 .meta-item i { font-size: 12px; color: var(--text3); flex-shrink: 0; }
 
 /* ── Score bar ── */
-.score-bar-wrap { margin: 6px 0; }
+.score-bar-wrap { margin: 4px 0; }
 .score-bar-header { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 3px; }
 .score-bar-bg { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
 .score-bar-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
 
-/* ── Sentiment (compact) ── */
-.sent-bar { display: flex; height: 3px; border-radius: 2px; overflow: hidden; margin: 4px 0; }
-.sent-pos { background: #22c55e; }
-.sent-neu { background: #d1d5db; }
-.sent-neg { background: #f87171; }
-
 /* ── Source tags ── */
-.card-sources { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.card-sources { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
 
 /* ── Source panel ── */
 .source-panel { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
@@ -242,13 +215,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); }
 .empty i { font-size: 36px; display: block; margin-bottom: 12px; }
 .empty p { font-size: 14px; }
-.loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
-.skeleton { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); height: 280px; overflow: hidden; position: relative; }
+.loading-grid { display: flex; flex-direction: column; gap: 10px; }
+.skeleton { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); height: 140px; overflow: hidden; position: relative; }
+.skeleton:first-child { height: 240px; }
 .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,transparent 0%,var(--surface2) 50%,transparent 100%); animation: shimmer 1.4s infinite; }
 @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
 
-/* ── Leaderboard header ── */
-.lb-section-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin: 12px 0 6px; display: flex; align-items: center; gap: 6px; }
+/* ── Section labels ── */
+.lb-section-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 7px; display: flex; align-items: center; gap: 6px; }
 .lb-section-label::after { content:''; flex:1; height:0.5px; background: var(--border2); }
 
 /* ── Rank change flash ── */
@@ -261,11 +235,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .footer { text-align: center; padding: 2rem 0; font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); margin-top: 2rem; }
 
 @media (max-width: 640px) {
-  .lb-podium { grid-template-columns: 1fr; }
-  .lb-grid   { grid-template-columns: 1fr; }
   .event-card.card-hero { flex-direction: column; }
-  .event-card.card-hero .card-image-wrap { width: 100%; height: 160px; }
+  .event-card.card-hero .card-image-wrap { width: 100%; height: 200px; }
+  .event-card.card-featured { flex-direction: column; }
+  .event-card.card-featured .card-image-wrap { width: 100%; height: 160px; }
   .summary-row { grid-template-columns: repeat(3, 1fr); }
+  .card-list .event-name { max-width: 180px; }
 }
 </style>
 </head>
@@ -279,14 +254,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <div class="brand-icon"><i class="ti ti-map-pin"></i></div>
         <div>
           <div class="brand-name">FOMO Sydney</div>
-          <div class="brand-sub">Social relevance leaderboard · 150 sources</div>
+          <div class="brand-sub">Trending events · art, music, culture, food</div>
         </div>
       </div>
       <div class="header-meta">
         <span id="last-updated"><span class="live-dot"></span>Loading…</span>
         <button class="toggle-sources" id="toggle-sources-btn" aria-expanded="false">
           <i class="ti ti-server"></i>
-          <span id="source-count">50 sources</span>
+          <span id="source-count">— sources</span>
         </button>
         <button class="refresh-btn" id="refresh-btn">
           <i class="ti ti-refresh"></i>Refresh
@@ -321,7 +296,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <input class="search-input" type="search" id="search-input" placeholder="Search events, venues, suburbs…">
     </div>
     <select class="toolbar-select" id="sort-select">
-      <option value="trend">Sort: Social relevance</option>
+      <option value="trend">Sort: Trending</option>
       <option value="talking">Sort: Most talked about</option>
       <option value="date">Sort: Upcoming first</option>
     </select>
@@ -337,19 +312,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="filter-btn" data-cat="food"><i class="ti ti-chef-hat"></i>Food &amp; drink <span class="count" id="cnt-food">0</span></button>
     <button class="filter-btn" data-cat="art"><i class="ti ti-palette"></i>Art <span class="count" id="cnt-art">0</span></button>
     <button class="filter-btn" data-cat="market"><i class="ti ti-building-store"></i>Markets <span class="count" id="cnt-market">0</span></button>
-    <button class="filter-btn" data-cat="sport"><i class="ti ti-run"></i>Sport <span class="count" id="cnt-sport">0</span></button>
     <button class="filter-btn" data-cat="film"><i class="ti ti-movie"></i>Film <span class="count" id="cnt-film">0</span></button>
     <button class="filter-btn" data-cat="culture"><i class="ti ti-masks-theater"></i>Culture <span class="count" id="cnt-culture">0</span></button>
-    <button class="filter-btn" data-cat="wellness"><i class="ti ti-heart"></i>Wellness <span class="count" id="cnt-wellness">0</span></button>
-    <button class="filter-btn" data-cat="tech"><i class="ti ti-cpu"></i>Tech <span class="count" id="cnt-tech">0</span></button>
-    <button class="filter-btn" data-cat="education"><i class="ti ti-school"></i>Workshops <span class="count" id="cnt-education">0</span></button>
   </div>
 
   <!-- Leaderboard -->
   <div id="events-container">
     <div class="loading-grid" id="loading-grid">
       <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      <div class="skeleton"></div><div class="skeleton"></div>
     </div>
     <div id="leaderboard-wrap" style="display:none"></div>
     <div class="empty" id="empty-state" style="display:none">
@@ -359,7 +330,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 
   <footer class="footer">
-    FOMO Sydney · Social relevance powered by 50+ sources + Reddit · Refreshes every 6 hours
+    FOMO Sydney · Trending art, music, culture &amp; food events · 150+ sources · Refreshes every 6 hours
   </footer>
 </div>
 
@@ -368,7 +339,7 @@ const API = '';
 let state = {
   allEvents: [], cat: 'all', sort: 'trend', search: '', suburb: '',
   stats: null, sources: [], sourcePanelOpen: false,
-  prevRanks: new Map(), // id → rank, for change detection
+  prevRanks: new Map(),
 };
 
 // ── Fetch ──────────────────────────────────────────────────────────────────────
@@ -383,18 +354,14 @@ async function fetchEvents() {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
-function decodeHtml(s) {
-  const t = document.createElement('textarea');
-  t.innerHTML = s;
-  return t.value;
-}
+function decodeHtml(s) { const t = document.createElement('textarea'); t.innerHTML = s; return t.value; }
 function esc(s) { const d = decodeHtml(String(s||'')); return d.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function fmtDate(ev) {
   const d = ev.date?.display || ev.date?.start;
   if (!d) return '';
   try {
-    const opts = { weekday:'short', day:'numeric', month:'short' };
+    const opts = { weekday:'short', day:'numeric', month:'long' };
     if (typeof d === 'string' && d.length <= 12)
       return new Date(d + 'T00:00:00').toLocaleDateString('en-AU', opts);
     return new Date(d).toLocaleDateString('en-AU', opts);
@@ -409,8 +376,8 @@ function fmtNum(n) {
 }
 
 function catBadge(cat) {
-  const icons  = { music:'ti-music', food:'ti-chef-hat', art:'ti-palette', sport:'ti-run', market:'ti-building-store', film:'ti-movie', culture:'ti-masks-theater', wellness:'ti-heart', tech:'ti-cpu', education:'ti-school' };
-  const labels = { music:'Music', food:'Food & drink', art:'Art', sport:'Sport', market:'Markets', film:'Film', culture:'Culture', wellness:'Wellness', tech:'Tech', education:'Workshop' };
+  const icons  = { music:'ti-music', food:'ti-chef-hat', art:'ti-palette', market:'ti-building-store', film:'ti-movie', culture:'ti-masks-theater' };
+  const labels = { music:'Music', food:'Food & drink', art:'Art', market:'Markets', film:'Film', culture:'Culture' };
   return `<span class="badge badge-cat-${esc(cat)}"><i class="ti ${icons[cat]||'ti-tag'}"></i>${labels[cat]||cat}</span>`;
 }
 
@@ -422,22 +389,13 @@ function trendBadge(level, label) {
 function rankBadge(rank, cls='') {
   const rankCls = rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-n';
   const icon    = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':null;
-  const label   = icon || `#${rank}`;
-  return `<div class="rank-badge ${rankCls} ${cls}">${label}</div>`;
+  return `<div class="rank-badge ${rankCls} ${cls}">${icon||`#${rank}`}</div>`;
 }
 
 function scoreRing(score, size='') {
   const pct   = Math.max(0, Math.min(100, score || 0));
   const color = pct >= 70 ? '#16a34a' : pct >= 45 ? '#d97706' : '#6b7280';
   return `<div class="score-ring ${size}" style="--pct:${pct};--ring-color:${color}"><span>${pct}</span></div>`;
-}
-
-function scoreBar(score, level) {
-  const color = { hot:'#dc2626', rising:'#d97706', steady:'#16a34a' }[level] || '#888';
-  return `<div class="score-bar-wrap">
-    <div class="score-bar-header"><span>Social relevance</span><span>${score}/100</span></div>
-    <div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${color}"></div></div>
-  </div>`;
 }
 
 function signalPills(ev) {
@@ -451,19 +409,10 @@ function signalPills(ev) {
   let pills = `<span class="signal"><i class="ti ti-database"></i>${srcs} source${srcs!==1?'s':''}</span>`;
   if (talk)   pills += `<span class="signal"><i class="ti ti-users"></i>${talk} talking</span>`;
   if (rsvp)   pills += `<span class="signal"><i class="ti ti-calendar-check"></i>${rsvp} going</span>`;
-  if (reddit > 0) pills += `<span class="signal sig-reddit"><i class="ti ti-brand-reddit"></i>${reddit} Reddit mention${reddit!==1?'s':''}</span>`;
+  if (reddit > 0) pills += `<span class="signal sig-reddit"><i class="ti ti-brand-reddit"></i>${reddit} Reddit</span>`;
   if (vel > 0.4)  pills += `<span class="signal sig-new"><i class="ti ti-trending-up"></i>Trending</span>`;
   if (ev.trendLevel === 'hot') pills += `<span class="signal sig-hot"><i class="ti ti-flame"></i>Hot</span>`;
   return `<div class="signals">${pills}</div>`;
-}
-
-function sentBar(ev) {
-  const s = ev.sentiment || { positive:75, neutral:20, negative:5 };
-  return `<div class="sent-bar">
-    <div class="sent-pos" style="width:${s.positive||75}%"></div>
-    <div class="sent-neu" style="width:${s.neutral||20}%"></div>
-    <div class="sent-neg" style="width:${s.negative||5}%"></div>
-  </div>`;
 }
 
 function sourceTags(ev) {
@@ -471,7 +420,19 @@ function sourceTags(ev) {
   return names.map(n=>`<span class="badge badge-source">${esc(n)}</span>`).join('');
 }
 
+function validImg(url) {
+  return url && typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
+}
+
+function imgOrPlaceholder(imageUrl, cls) {
+  if (validImg(imageUrl)) {
+    return `<img class="card-image" src="${esc(imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=\\'ti ti-calendar-event\\'></i></div>'">`;
+  }
+  return `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`;
+}
+
 // ── Card renderers ─────────────────────────────────────────────────────────────
+
 function heroCard(ev) {
   const date = fmtDate(ev);
   const loc  = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ');
@@ -479,22 +440,18 @@ function heroCard(ev) {
 
   return `<article class="event-card card-hero" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
     ${rankBadge(ev.socialRank)}
-    <div class="card-image-wrap">
-      ${validImg(ev.imageUrl)
-        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
-        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
-    </div>
+    <div class="card-image-wrap">${imgOrPlaceholder(ev.imageUrl)}</div>
     <div class="card-body">
       <div style="display:flex;align-items:flex-start;gap:14px">
         <div style="flex:1">
-          <h2 class="event-name" style="font-size:22px;margin-bottom:6px">
+          <h2 class="event-name">
             ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}
           </h2>
-          <div class="badges">${catBadge(ev.category)}${trendBadge(ev.trendLevel, ev.trendLabel)}</div>
+          <div class="badges" style="margin-top:6px">${catBadge(ev.category)}${trendBadge(ev.trendLevel, ev.trendLabel)}</div>
         </div>
         <div style="text-align:center;flex-shrink:0">
           ${scoreRing(ev.socialScore)}
-          <div class="score-label">Relevance</div>
+          <div class="score-label">Trending</div>
         </div>
       </div>
       ${signalPills(ev)}
@@ -504,65 +461,37 @@ function heroCard(ev) {
         ${host ? `<div class="meta-item"><i class="ti ti-user"></i>${esc(host)}</div>` : ''}
         ${ev.isFree ? `<div class="meta-item"><i class="ti ti-ticket"></i>Free</div>` : ''}
       </div>
-      ${sentBar(ev)}
       <div class="card-sources">${sourceTags(ev)}</div>
     </div>
   </article>`;
 }
 
-function podiumCard(ev) {
+function featuredCard(ev) {
   const date = fmtDate(ev);
   const loc  = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ');
 
-  return `<article class="event-card card-podium" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
+  return `<article class="event-card card-featured" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
     ${rankBadge(ev.socialRank)}
-    <div class="card-image-wrap">
-      ${validImg(ev.imageUrl)
-        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
-        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
-    </div>
+    <div class="card-image-wrap">${imgOrPlaceholder(ev.imageUrl)}</div>
     <div class="card-body">
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px">
-        <h2 class="event-name" style="flex:1">${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}</h2>
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="flex:1">
+          <h2 class="event-name">
+            ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}
+          </h2>
+          <div class="badges" style="margin-top:4px">${catBadge(ev.category)}${trendBadge(ev.trendLevel, ev.trendLabel)}</div>
+        </div>
         <div style="text-align:center;flex-shrink:0">
           ${scoreRing(ev.socialScore,'score-ring-sm')}
-          <div class="score-label">Rel.</div>
+          <div class="score-label">Trending</div>
         </div>
       </div>
-      <div class="badges">${catBadge(ev.category)}${trendBadge(ev.trendLevel,ev.trendLabel)}</div>
       ${signalPills(ev)}
       <div class="card-meta">
         ${date ? `<div class="meta-item"><i class="ti ti-calendar"></i>${esc(date)}</div>` : ''}
         ${loc  ? `<div class="meta-item"><i class="ti ti-map-pin"></i>${esc(loc)}</div>` : ''}
       </div>
-      ${sentBar(ev)}
       <div class="card-sources">${sourceTags(ev)}</div>
-    </div>
-  </article>`;
-}
-
-function gridCard(ev) {
-  const date = fmtDate(ev);
-  const loc  = ev.location?.suburb || ev.location?.name || '';
-
-  return `<article class="event-card card-grid" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
-    ${rankBadge(ev.socialRank)}
-    <div class="card-image-wrap">
-      ${validImg(ev.imageUrl)
-        ? `<img class="card-image" src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-image-placeholder><i class=ti><i class=ti-calendar-event></i></div>'">`
-        : `<div class="card-image-placeholder"><i class="ti ti-calendar-event"></i></div>`}
-    </div>
-    <div class="card-body">
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:4px">
-        <h2 class="event-name" style="flex:1;font-size:13px">${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}</h2>
-      </div>
-      <div class="badges" style="margin-bottom:5px">${catBadge(ev.category)}</div>
-      ${scoreBar(ev.socialScore, ev.trendLevel)}
-      ${signalPills(ev)}
-      <div class="card-meta" style="margin-top:4px">
-        ${date ? `<div class="meta-item"><i class="ti ti-calendar"></i>${esc(date)}</div>` : ''}
-        ${loc  ? `<div class="meta-item"><i class="ti ti-map-pin"></i>${esc(loc)}</div>`  : ''}
-      </div>
     </div>
   </article>`;
 }
@@ -571,28 +500,26 @@ function listRow(ev) {
   const date = fmtDate(ev);
   const pct  = ev.socialScore || 0;
   const color= pct>=70?'#16a34a':pct>=45?'#d97706':'#6b7280';
+  const thumb = validImg(ev.imageUrl)
+    ? `<div class="card-thumb"><img src="${esc(ev.imageUrl)}" alt="" loading="lazy" onerror="this.parentNode.outerHTML='<div class=card-thumb-placeholder><i class=\\'ti ti-calendar-event\\'></i></div>'"></div>`
+    : `<div class="card-thumb-placeholder"><i class="ti ti-calendar-event"></i></div>`;
 
   return `<article class="event-card card-list" data-id="${esc(ev.id)}" data-rank="${ev.socialRank}">
     ${rankBadge(ev.socialRank, '')}
+    ${thumb}
     <div class="card-body">
-      <h2 class="event-name" style="flex:1">
+      <h2 class="event-name">
         ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.name)}</a>` : esc(ev.name)}
       </h2>
       <div class="badges" style="flex-shrink:0">${catBadge(ev.category)}</div>
       ${date ? `<div class="meta-item" style="flex-shrink:0;font-size:12px;color:var(--text2)"><i class="ti ti-calendar" style="font-size:12px;color:var(--text3)"></i>${esc(date)}</div>` : ''}
     </div>
-    <div style="flex-shrink:0;font-size:13px;font-weight:700;color:${color};min-width:36px;text-align:right">${pct}</div>
+    <div style="flex-shrink:0;font-size:13px;font-weight:700;color:${color};min-width:30px;text-align:right">${pct}</div>
   </article>`;
-}
-
-// ── Image URL validator ────────────────────────────────────────────────────────
-function validImg(url) {
-  return url && typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
 }
 
 // ── Leaderboard render ─────────────────────────────────────────────────────────
 function renderLeaderboard(events) {
-  // Normalise events that were scored before the new algorithm (have trendScore but not socialScore)
   events.forEach((ev, i) => {
     if (!ev.socialScore) ev.socialScore = ev.trendScore || 0;
     if (!ev.socialRank)  ev.socialRank  = i + 1;
@@ -614,31 +541,24 @@ function renderLeaderboard(events) {
   empty.style.display = 'none';
   wrap.style.display = 'block';
 
-  // Record which IDs are at which positions before re-render (for rank-change animation)
   const prevRanks = new Map();
   wrap.querySelectorAll('[data-id]').forEach(el => {
     prevRanks.set(el.dataset.id, parseInt(el.dataset.rank) || 999);
   });
 
-  // Build leaderboard HTML
-  const hero    = events.slice(0, 1);
-  const podium  = events.slice(1, 3);
-  const grid    = events.slice(3, 9);
-  const list    = events.slice(9);
+  const hero     = events.slice(0, 1);
+  const featured = events.slice(1, 5);
+  const list     = events.slice(5);
 
   let html = '<div class="leaderboard">';
 
   if (hero.length) {
-    html += `<div class="lb-section-label"><i class="ti ti-trophy" style="color:var(--gold)"></i>#1 Most Relevant</div>`;
+    html += `<div class="lb-section-label"><i class="ti ti-trophy" style="color:var(--gold)"></i>#1 Trending</div>`;
     html += `<div class="lb-hero">${hero.map(heroCard).join('')}</div>`;
   }
-  if (podium.length) {
-    html += `<div class="lb-section-label"><i class="ti ti-medal" style="color:var(--silver)"></i>Top 3</div>`;
-    html += `<div class="lb-podium">${podium.map(podiumCard).join('')}</div>`;
-  }
-  if (grid.length) {
-    html += `<div class="lb-section-label"><i class="ti ti-layout-grid"></i>Rising</div>`;
-    html += `<div class="lb-grid">${grid.map(gridCard).join('')}</div>`;
+  if (featured.length) {
+    html += `<div class="lb-section-label"><i class="ti ti-flame" style="color:var(--hot)"></i>Top 5</div>`;
+    html += `<div class="lb-featured">${featured.map(featuredCard).join('')}</div>`;
   }
   if (list.length) {
     html += `<div class="lb-section-label"><i class="ti ti-list"></i>All events</div>`;
@@ -648,7 +568,6 @@ function renderLeaderboard(events) {
 
   wrap.innerHTML = html;
 
-  // Animate rank changes
   if (prevRanks.size > 0) {
     wrap.querySelectorAll('[data-id]').forEach(el => {
       const prev = prevRanks.get(el.dataset.id);
@@ -672,7 +591,7 @@ function renderStats(stats, updatedAt) {
     document.getElementById('s-sources').textContent  = `${stats.sources?.ok||0}/${stats.sources?.total||'—'}`;
     const cats = stats.categories||{};
     document.getElementById('cnt-all').textContent = stats.totalEvents||0;
-    ['music','food','art','market','sport','film','culture','wellness','tech','education'].forEach(c=>{
+    ['music','food','art','market','film','culture'].forEach(c=>{
       const el = document.getElementById(`cnt-${c}`);
       if (el) el.textContent = cats[c]||0;
     });
@@ -705,7 +624,7 @@ function renderSources(sources) {
 // ── Load ───────────────────────────────────────────────────────────────────────
 async function load(showLoading = true) {
   if (showLoading) {
-    document.getElementById('loading-grid').style.display = 'grid';
+    document.getElementById('loading-grid').style.display = 'flex';
     document.getElementById('leaderboard-wrap').style.display = 'none';
     document.getElementById('empty-state').style.display = 'none';
   }
@@ -749,9 +668,7 @@ document.getElementById('toggle-sources-btn').addEventListener('click', () => {
   if (state.sourcePanelOpen && state.sources.length) renderSources(state.sources);
 });
 
-// Auto-refresh every 5 minutes (no loading spinner)
 setInterval(() => load(false), 5 * 60 * 1000);
-
 load();
 </script>
 </body>

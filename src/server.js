@@ -13,12 +13,25 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
+// Categories not relevant to the art/music/culture/food focus
+const EXCLUDED_CATS = new Set(['sport', 'wellness', 'tech', 'education']);
+
+function isCleanEvent(e) {
+  if (EXCLUDED_CATS.has(e.category)) return false;
+  const name = (e.name || '').toLowerCase().trim();
+  const venue = (e.location?.name || '').toLowerCase().trim();
+  // Remove listings where the event name IS the venue name
+  if (venue && name === venue) return false;
+  if (name.length < 5) return false;
+  return true;
+}
+
 // ─── GET /api/events ──────────────────────────────────────────────────────────
 app.get('/api/events', async (req, res) => {
   const data = await loadEvents();
   if (!data) return res.json({ events: [], updatedAt: null, totalEvents: 0 });
 
-  let events = data.events || [];
+  let events = (data.events || []).filter(isCleanEvent);
 
   if (req.query.category && req.query.category !== 'all') {
     events = events.filter(e => e.category === req.query.category);
@@ -55,7 +68,7 @@ app.get('/api/events', async (req, res) => {
 // ─── GET /api/stats ───────────────────────────────────────────────────────────
 app.get('/api/stats', async (req, res) => {
   const [data, state] = await Promise.all([loadEvents(), loadState()]);
-  const events = data?.events || [];
+  const events = (data?.events || []).filter(isCleanEvent);
 
   const categories = {};
   const suburbs = {};

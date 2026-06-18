@@ -89,12 +89,13 @@ async function fetchMoshtixAllPages() {
       timeout: 20000,
     });
     const rawEvents = Object.values(res.data?.EventSearchResults || {});
+    const fixImg = p => (p && p !== '/uploads/' && p !== '/uploads') ? `https://www.moshtix.com.au${p}` : null;
     return rawEvents.map(e => ({
       name: e.Title,
       startDate: e.StartDate,
       dateDisplay: e.StartDateFormatted,
       url: e.EventUrl || e.Url,
-      imageUrl: e.PhotoFileCustomUrl || e.PhotoFileUrl,
+      imageUrl: fixImg(e.PhotoFileCustomUrl) || fixImg(e.PhotoFileUrl),
       venueName: e.VenueName,
       address: [e.Street1, e.Suburb, e.City].filter(Boolean).join(', '),
       description: (e.Summary || e.Details || '').slice(0, 500),
@@ -125,7 +126,7 @@ async function fetchOztix() {
       const href = $(el).find('a').first().attr('href') || '';
       results.push({ name, dateDisplay: date, url: href.startsWith('http') ? href : `https://www.oztix.com.au${href}` });
     });
-    return results.slice(0, 20);
+    return results;
   } catch (err) {
     console.error('[OzTix]', err.message);
     return [];
@@ -149,7 +150,7 @@ async function fetchStickyTickets() {
       const href = $(el).find('a').first().attr('href') || '';
       results.push({ name, dateDisplay: date, url: href.startsWith('http') ? href : `https://www.stickytickets.com.au${href}` });
     });
-    return results.slice(0, 20);
+    return results;
   } catch (err) {
     console.error('[StickyTickets]', err.message);
     return [];
@@ -200,7 +201,7 @@ async function fetchTryBookingSydney() {
       const html = await fetchHtml(url);
       if (!html) continue;
       const events = extractJsonLd(html);
-      if (events.length) return events.slice(0, 20);
+      if (events.length) return events;
       const $ = cheerio.load(html);
       const results = [];
       const seen = new Set();
@@ -211,7 +212,7 @@ async function fetchTryBookingSydney() {
         const href = $(el).find('a').first().attr('href') || '';
         results.push({ name, url: href.startsWith('http') ? href : `https://www.trybooking.com${href}` });
       });
-      if (results.length > 2) return results.slice(0, 20);
+      if (results.length > 2) return results;
     }
     return [];
   } catch (err) {
@@ -230,7 +231,7 @@ async function fetchEventbriteSydney() {
       const html = await fetchHtml(url);
       if (!html) continue;
       const events = extractJsonLd(html);
-      if (events.length > 3) return events.slice(0, 30);
+      if (events.length > 3) return events;
       // Fallback: h3 tags contain event names
       const $ = cheerio.load(html);
       const results = [];
@@ -243,7 +244,7 @@ async function fetchEventbriteSydney() {
         const date = $(el).closest('[class*="card"],[class*="event"],article').find('time,[class*="date"]').first().text().trim();
         results.push({ name, dateDisplay: date, url: href.startsWith('http') ? href : (href ? `https://www.eventbrite.com.au${href}` : '') });
       });
-      if (results.length > 3) return results.slice(0, 30);
+      if (results.length > 3) return results;
     }
     return [];
   } catch (err) {
@@ -269,7 +270,7 @@ async function fetchEventfindaSydney() {
       const date = $(el).closest('article,li,.event-item').find('time,[class*="date"]').first().text().trim();
       results.push({ name, dateDisplay: date, url: href.startsWith('http') ? href : `https://www.eventfinda.com.au${href}` });
     });
-    return results.slice(0, 30);
+    return results;
   } catch (err) {
     console.error('[Eventfinda Sydney]', err.message);
     return [];
@@ -281,7 +282,7 @@ async function fetchPeatixSydney() {
   try {
     const html = await fetchHtml('https://peatix.com/country/au/events');
     const events = extractJsonLd(html);
-    if (events.length) return events.slice(0, 20);
+    if (events.length) return events;
     const $ = cheerio.load(html || '');
     const results = [];
     const seen = new Set();
@@ -292,7 +293,7 @@ async function fetchPeatixSydney() {
       const href = $(el).find('a').first().attr('href') || '';
       results.push({ name, url: href.startsWith('http') ? href : `https://peatix.com${href}` });
     });
-    return results.slice(0, 20);
+    return results;
   } catch (err) {
     console.error('[Peatix Sydney]', err.message);
     return [];

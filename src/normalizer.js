@@ -1,16 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
 
 const CATEGORY_MAP = {
-  music: ['music', 'concert', 'gig', 'band', 'dj', 'festival', 'electronic', 'jazz', 'hip hop', 'rock', 'pop', 'classical', 'indie', 'rave', 'nightclub', 'club night', 'live music', 'songkick', 'bandsintown', 'resident advisor'],
-  food: ['food', 'drink', 'dining', 'restaurant', 'bar', 'wine', 'beer', 'cocktail', 'tasting', 'market', 'farmers', 'brunch', 'dinner', 'lunch', 'chef', 'culinary', 'gastro', 'noodle', 'bbq', 'feast'],
-  art: ['art', 'gallery', 'exhibition', 'sculpture', 'painting', 'installation', 'photography', 'mural', 'design', 'illustration', 'print', 'ceramics', 'craft', 'vivid', 'light show'],
-  sport: ['sport', 'run', 'race', 'triathlon', 'yoga', 'fitness', 'cycling', 'swim', 'surf', 'hike', 'walk', 'football', 'rugby', 'cricket', 'tennis', 'gym', 'crossfit', 'pilates', 'martial arts', 'boxing'],
-  market: ['market', 'markets', 'flea', 'pop-up', 'pop up', 'bazaar', 'fair', 'stall', 'vendor', 'artisan', 'handmade'],
-  film: ['film', 'cinema', 'movie', 'screening', 'documentary', 'short film', 'premiere', 'outdoor cinema', 'moonlight'],
-  culture: ['culture', 'festival', 'comedy', 'theatre', 'theater', 'dance', 'performance', 'spoken word', 'poetry', 'literary', 'book', 'history', 'heritage', 'indigenous', 'aboriginal', 'community', 'lgbtq', 'pride'],
-  wellness: ['wellness', 'meditation', 'mindfulness', 'health', 'wellbeing', 'mental health', 'spa', 'retreat', 'healing', 'holistic', 'naturopath'],
-  tech: ['tech', 'technology', 'startup', 'hackathon', 'coding', 'ai', 'blockchain', 'developer', 'innovation', 'conference', 'networking'],
-  education: ['workshop', 'class', 'course', 'seminar', 'talk', 'lecture', 'learn', 'training', 'skill', 'masterclass'],
+  music: ['music', 'concert', 'gig', 'band', 'dj', 'electronic', 'jazz', 'hip hop', 'hip-hop', 'rock', 'pop', 'classical', 'indie', 'rave', 'nightclub', 'club night', 'live music', 'songkick', 'bandsintown', 'resident advisor', 'symphony', 'orchestra', 'opera', 'cabaret', 'tour', 'album launch', 'single launch', 'headline', 'support act'],
+  food: ['food', 'dining', 'restaurant', 'wine', 'beer', 'cocktail', 'tasting', 'brunch', 'dinner', 'lunch', 'chef', 'culinary', 'gastro', 'noodle', 'bbq', 'feast', 'degustation', 'cuisine', 'bar crawl', 'night noodle'],
+  art: ['art', 'gallery', 'exhibition', 'sculpture', 'painting', 'installation', 'photography', 'mural', 'design', 'illustration', 'print', 'ceramics', 'craft', 'vivid', 'light show', 'visual art', 'artwork'],
+  market: ['market', 'markets', 'flea', 'pop-up market', 'bazaar', 'artisan market', 'handmade market', 'farmers market', 'organic market'],
+  film: ['film', 'cinema', 'movie', 'screening', 'documentary', 'short film', 'premiere', 'outdoor cinema', 'moonlight cinema', 'film festival'],
+  culture: ['culture', 'festival', 'comedy', 'theatre', 'theater', 'dance', 'performance', 'spoken word', 'poetry', 'literary', 'book', 'history', 'heritage', 'indigenous', 'aboriginal', 'community', 'lgbtq', 'pride', 'circus', 'drag', 'burlesque', 'improv', 'stand-up', 'comedy festival'],
 };
 
 function inferCategory(text) {
