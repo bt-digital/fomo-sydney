@@ -669,7 +669,7 @@ function renderStats(stats, updatedAt) {
     document.getElementById('s-hot').textContent      = (stats.hotCount||0).toLocaleString();
     document.getElementById('s-weekend').textContent  = (stats.thisWeekend||0).toLocaleString();
     document.getElementById('s-free').textContent     = (stats.freeCount||0).toLocaleString();
-    document.getElementById('s-sources').textContent  = `${stats.sources?.ok||0}/${stats.sources?.total||50}`;
+    document.getElementById('s-sources').textContent  = `${stats.sources?.ok||0}/${stats.sources?.total||'—'}`;
     const cats = stats.categories||{};
     document.getElementById('cnt-all').textContent = stats.totalEvents||0;
     ['music','food','art','market','sport','film','culture','wellness','tech','education'].forEach(c=>{
