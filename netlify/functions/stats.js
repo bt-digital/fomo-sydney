@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { loadEvents, loadState } = require('../../src/store');
-const { SOURCES } = require('../../src/agent');
+const { SOURCES } = require('../../src/sources/registry');
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -36,10 +36,16 @@ exports.handler = async (event) => {
         hotCount, freeCount, totalTalking, thisWeekend,
         categories,
         topSuburbs: Object.entries(suburbs).sort((a, b) => b[1] - a[1]).slice(0, 10),
-        sources: { total: SOURCES.length, ok: state.sourcesOk, failed: state.sourcesFailed, lastCrawl: state.lastCrawl },
+        sources: {
+          total: SOURCES.length,
+          ok: state.sourcesOk,
+          failed: state.sourcesFailed,
+          lastCrawl: state.lastCrawl,
+        },
       }),
     };
   } catch (err) {
+    console.error('[stats]', err.message);
     return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: err.message }) };
   }
 };

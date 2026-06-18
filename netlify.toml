@@ -6,9 +6,19 @@
   NODE_VERSION = "18"
 
 # Scheduled background crawl — every 6 hours
-# Background suffix gives 15-minute timeout for the full 50-source crawl
 [functions."scheduled-crawl-background"]
   schedule = "0 */6 * * *"
+
+# Use node_modules bundling for functions that do heavy scraping
+# (esbuild tree-shaking can break dynamic requires in cheerio/axios)
+[functions."crawl-background"]
+  node_bundler = "zisi"
+
+[functions."scheduled-crawl-background"]
+  node_bundler = "zisi"
+
+[functions."deploy-succeeded-background"]
+  node_bundler = "zisi"
 
 # API route rewrites → Netlify Functions
 [[redirects]]
