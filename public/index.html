@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOMO Sydney — Event Discovery</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.6.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f9f8f6;
+    --surface: #ffffff;
+    --surface2: #f3f2ef;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a1a;
+    --text2: #555;
+    --text3: #999;
+    --accent: #7c3aed;
+    --accent-bg: #ede9fe;
+    --hot: #dc2626;
+    --hot-bg: #fee2e2;
+    --rising: #d97706;
+    --rising-bg: #fef3c7;
+    --steady: #16a34a;
+    --steady-bg: #dcfce7;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110;
+      --surface: #1c1c1a;
+      --surface2: #252523;
+      --border: rgba(255,255,255,0.09);
+      --border2: rgba(255,255,255,0.16);
+      --text: #f0ede8;
+      --text2: #a09d98;
+      --text3: #666;
+      --accent: #a78bfa;
+      --accent-bg: #2e1f5e;
+      --hot: #f87171;
+      --hot-bg: #450a0a;
+      --rising: #fbbf24;
+      --rising-bg: #451a03;
+      --steady: #4ade80;
+      --steady-bg: #052e16;
+    }
+  }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+
+  .layout { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Header ── */
+  .header { padding: 1.5rem 0 1.25rem; border-bottom: 0.5px solid var(--border); margin-bottom: 1.5rem; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #db2777); display: flex; align-items: center; justify-content: center; }
+  .brand-icon i { font-size: 20px; color: #fff; }
+  .brand-name { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+  .brand-sub { font-size: 12px; color: var(--text3); }
+  .header-meta { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text3); }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .refresh-btn { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 13px; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
+  .refresh-btn:hover { background: var(--surface2); }
+  .refresh-btn.spinning i { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Summary chips ── */
+  .summary-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .summary-chip { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .chip-val { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; }
+  .chip-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  /* ── Toolbar ── */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem; align-items: center; }
+  .search-wrap { flex: 1; min-width: 200px; position: relative; }
+  .search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); }
+  .search-input { width: 100%; padding: 8px 12px 8px 34px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 14px; outline: none; }
+  .search-input:focus { border-color: var(--accent); }
+  .toolbar-select { padding: 8px 12px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer; outline: none; }
+
+  /* ── Filters ── */
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+  .filter-btn { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.12s; display: flex; align-items: center; gap: 5px; }
+  .filter-btn:hover { background: var(--surface2); }
+  .filter-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .filter-btn .count { font-size: 10px; background: var(--surface2); border-radius: 10px; padding: 1px 5px; }
+
+  /* ── Events grid ── */
+  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+
+  /* ── Event card ── */
+  .event-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s, transform 0.15s; }
+  .event-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+
+  .card-image { width: 100%; height: 140px; object-fit: cover; background: var(--surface2); display: block; }
+  .card-image-placeholder { width: 100%; height: 100px; background: var(--surface2); display: flex; align-items: center; justify-content: center; }
+  .card-image-placeholder i { font-size: 28px; color: var(--text3); }
+
+  .card-body { padding: 14px 16px; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .event-name { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; }
+  .event-name a { color: inherit; text-decoration: none; }
+  .event-name a:hover { color: var(--accent); }
+
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; }
+  .badge i { font-size: 11px; }
+  .badge-cat-music    { background: #ede9fe; color: #5b21b6; }
+  .badge-cat-food     { background: #fef3c7; color: #92400e; }
+  .badge-cat-art      { background: #fce7f3; color: #9d174d; }
+  .badge-cat-sport    { background: #dcfce7; color: #14532d; }
+  .badge-cat-market   { background: #e0f2fe; color: #0c4a6e; }
+  .badge-cat-film     { background: #f3e8ff; color: #6b21a8; }
+  .badge-cat-culture  { background: #ffedd5; color: #7c2d12; }
+  .badge-cat-wellness { background: #ecfdf5; color: #064e3b; }
+  .badge-cat-tech     { background: #eff6ff; color: #1e3a8a; }
+  .badge-cat-education { background: #fef9c3; color: #713f12; }
+  .badge-hot     { background: var(--hot-bg); color: var(--hot); }
+  .badge-rising  { background: var(--rising-bg); color: var(--rising); }
+  .badge-steady  { background: var(--steady-bg); color: var(--steady); }
+  .badge-free    { background: #f0fdf4; color: #15803d; }
+  .badge-source  { background: var(--surface2); color: var(--text3); font-size: 10px; }
+
+  .card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px; margin-bottom: 10px; }
+  .meta-item { display: flex; align-items: flex-start; gap: 5px; font-size: 12px; color: var(--text2); }
+  .meta-item i { font-size: 13px; color: var(--text3); margin-top: 1px; flex-shrink: 0; }
+  .meta-item span { line-height: 1.3; }
+  .meta-full { grid-column: span 2; }
+
+  .card-divider { border: none; border-top: 0.5px solid var(--border); margin: 10px 0; }
+
+  /* ── Trend bar ── */
+  .trend-row { margin-bottom: 8px; }
+  .trend-header { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .trend-score { font-weight: 600; color: var(--text2); }
+  .trend-bar-bg { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .trend-bar-fill { height: 100%; border-radius: 2px; }
+
+  /* ── Sparkline ── */
+  .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 22px; margin-bottom: 10px; }
+  .spark-bar { width: 6px; border-radius: 1px; background: var(--border2); transition: background 0.2s; }
+  .spark-bar.lit { background: var(--accent); }
+
+  /* ── Stats row ── */
+  .stats-row { display: flex; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .stat { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text2); }
+  .stat strong { color: var(--text); font-weight: 600; }
+  .stat i { font-size: 13px; color: var(--text3); }
+
+  /* ── Sentiment ── */
+  .sentiment-header { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .sent-pos-label { color: var(--steady); font-weight: 600; }
+  .sentiment-bar { display: flex; height: 5px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .sent-pos { background: #22c55e; }
+  .sent-neu { background: #d1d5db; }
+  .sent-neg { background: #f87171; }
+  .sent-legend { display: flex; gap: 10px; }
+  .sent-item { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); }
+  .sent-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ── Comments ── */
+  .comments { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 10px; }
+  .comment { font-size: 12px; color: var(--text2); padding: 4px 0; border-bottom: 0.5px solid var(--border); display: flex; gap: 6px; align-items: flex-start; }
+  .comment:last-child { border-bottom: none; padding-bottom: 0; }
+  .comment-user { font-weight: 600; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+
+  /* ── Sources section ── */
+  .card-sources { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+
+  /* ── Source status panel ── */
+  .source-panel { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .source-panel-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .source-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+  .source-item { font-size: 11px; display: flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--surface2); color: var(--text2); }
+  .source-item.ok i { color: #22c55e; }
+  .source-item.fail i { color: var(--hot); }
+  .source-item.pending i { color: var(--text3); }
+
+  /* ── Empty / loading ── */
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); }
+  .empty i { font-size: 36px; display: block; margin-bottom: 12px; }
+  .empty p { font-size: 14px; }
+  .loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+  .skeleton { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); height: 360px; overflow: hidden; position: relative; }
+  .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, var(--surface2) 50%, transparent 100%); animation: shimmer 1.4s infinite; }
+  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 2rem 0; font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); margin-top: 2rem; }
+
+  /* ── Toggle source panel ── */
+  .toggle-sources { background: none; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 5px 10px; font-size: 12px; color: var(--text3); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .toggle-sources:hover { background: var(--surface2); }
+
+  @media (max-width: 600px) {
+    .events-grid { grid-template-columns: 1fr; }
+    .summary-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+        <div>
+          <div class="brand-name">FOMO Sydney</div>
+          <div class="brand-sub">Event discovery across 50 sources</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span id="last-updated"><span class="live-dot"></span>Loading…</span>
+        <button class="toggle-sources" id="toggle-sources-btn" aria-expanded="false">
+          <i class="ti ti-server" aria-hidden="true"></i>
+          <span id="source-count">50 sources</span>
+        </button>
+        <button class="refresh-btn" id="refresh-btn" aria-label="Refresh events">
+          <i class="ti ti-refresh" aria-hidden="true"></i>
+          Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Source status panel (hidden by default) -->
+  <div class="source-panel" id="source-panel" style="display:none" aria-label="Source status">
+    <div class="source-panel-title">
+      <i class="ti ti-plug" aria-hidden="true"></i>
+      Source status
+      <span id="sources-ok-count" style="margin-left:auto;font-weight:400;color:var(--text3)"></span>
+    </div>
+    <div class="source-grid" id="source-grid"></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-row" id="summary-row">
+    <div class="summary-chip"><div class="chip-val" id="s-total">—</div><div class="chip-lbl">events found</div></div>
+    <div class="summary-chip"><div class="chip-val" id="s-talking">—</div><div class="chip-lbl">people talking</div></div>
+    <div class="summary-chip"><div class="chip-val" id="s-hot">—</div><div class="chip-lbl">trending hot</div></div>
+    <div class="summary-chip"><div class="chip-val" id="s-weekend">—</div><div class="chip-lbl">this week</div></div>
+    <div class="summary-chip"><div class="chip-val" id="s-free">—</div><div class="chip-lbl">free events</div></div>
+    <div class="summary-chip"><div class="chip-val" id="s-sources">—</div><div class="chip-lbl">sources live</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search events, venues, suburbs…" aria-label="Search events">
+    </div>
+    <select class="toolbar-select" id="sort-select" aria-label="Sort by">
+      <option value="trend">Sort: Activity trend</option>
+      <option value="talking">Sort: Most talked about</option>
+      <option value="date">Sort: Upcoming first</option>
+    </select>
+    <select class="toolbar-select" id="suburb-select" aria-label="Filter by suburb">
+      <option value="">All suburbs</option>
+    </select>
+  </div>
+
+  <!-- Category filters -->
+  <div class="filters" id="filters" role="group" aria-label="Filter by category">
+    <button class="filter-btn active" data-cat="all">All <span class="count" id="cnt-all">…</span></button>
+    <button class="filter-btn" data-cat="music"><i class="ti ti-music" aria-hidden="true"></i>Music <span class="count" id="cnt-music">0</span></button>
+    <button class="filter-btn" data-cat="food"><i class="ti ti-chef-hat" aria-hidden="true"></i>Food &amp; drink <span class="count" id="cnt-food">0</span></button>
+    <button class="filter-btn" data-cat="art"><i class="ti ti-palette" aria-hidden="true"></i>Art <span class="count" id="cnt-art">0</span></button>
+    <button class="filter-btn" data-cat="market"><i class="ti ti-building-store" aria-hidden="true"></i>Markets <span class="count" id="cnt-market">0</span></button>
+    <button class="filter-btn" data-cat="sport"><i class="ti ti-run" aria-hidden="true"></i>Sport &amp; outdoors <span class="count" id="cnt-sport">0</span></button>
+    <button class="filter-btn" data-cat="film"><i class="ti ti-movie" aria-hidden="true"></i>Film <span class="count" id="cnt-film">0</span></button>
+    <button class="filter-btn" data-cat="culture"><i class="ti ti-masks-theater" aria-hidden="true"></i>Culture <span class="count" id="cnt-culture">0</span></button>
+    <button class="filter-btn" data-cat="wellness"><i class="ti ti-heart" aria-hidden="true"></i>Wellness <span class="count" id="cnt-wellness">0</span></button>
+    <button class="filter-btn" data-cat="tech"><i class="ti ti-cpu" aria-hidden="true"></i>Tech <span class="count" id="cnt-tech">0</span></button>
+    <button class="filter-btn" data-cat="education"><i class="ti ti-school" aria-hidden="true"></i>Workshops <span class="count" id="cnt-education">0</span></button>
+  </div>
+
+  <!-- Events grid -->
+  <div id="events-container">
+    <div class="loading-grid" id="loading-grid">
+      ${[...Array(6)].map(() => '<div class="skeleton"></div>').join('')}
+    </div>
+    <div class="events-grid" id="events-grid" style="display:none"></div>
+    <div class="empty" id="empty-state" style="display:none">
+      <i class="ti ti-calendar-off" aria-hidden="true"></i>
+      <p id="empty-msg">No events found.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    FOMO Sydney — aggregating events across 50+ sources in real time.<br>
+    Data refreshes every 6 hours. Some sources require API keys — see <code>.env.example</code>.
+  </footer>
+</div>
+
+<script>
+const API = '';  // same origin
+
+let state = {
+  allEvents: [],
+  cat: 'all',
+  sort: 'trend',
+  search: '',
+  suburb: '',
+  stats: null,
+  sources: [],
+  sourcePanelOpen: false,
+};
+
+// ─── Fetch helpers ─────────────────────────────────────────────────────────────
+async function fetchStats() {
+  try {
+    const r = await fetch(`${API}/api/stats`);
+    return await r.json();
+  } catch { return null; }
+}
+
+async function fetchSources() {
+  try {
+    const r = await fetch(`${API}/api/sources`);
+    const d = await r.json();
+    return d.sources || [];
+  } catch { return []; }
+}
+
+async function fetchEvents() {
+  const params = new URLSearchParams({ sort: state.sort, limit: 200 });
+  if (state.cat !== 'all') params.set('category', state.cat);
+  if (state.search) params.set('q', state.search);
+  if (state.suburb) params.set('suburb', state.suburb);
+  try {
+    const r = await fetch(`${API}/api/events?${params}`);
+    return await r.json();
+  } catch { return { events: [], total: 0 }; }
+}
+
+// ─── Render helpers ────────────────────────────────────────────────────────────
+function catBadge(cat) {
+  const icons = { music:'ti-music', food:'ti-chef-hat', art:'ti-palette', sport:'ti-run', market:'ti-building-store', film:'ti-movie', culture:'ti-masks-theater', wellness:'ti-heart', tech:'ti-cpu', education:'ti-school' };
+  const icon = icons[cat] || 'ti-tag';
+  const label = { music:'Music', food:'Food & drink', art:'Art', market:'Markets', sport:'Sport', film:'Film', culture:'Culture', wellness:'Wellness', tech:'Tech', education:'Workshop' }[cat] || cat;
+  return `<span class="badge badge-cat-${cat}"><i class="ti ${icon}" aria-hidden="true"></i>${label}</span>`;
+}
+
+function trendBadge(level, label) {
+  const icons = { hot: 'ti-flame', rising: 'ti-trending-up', steady: 'ti-minus' };
+  return `<span class="badge badge-${level}"><i class="ti ${icons[level] || 'ti-minus'}" aria-hidden="true"></i>${label || level}</span>`;
+}
+
+function sparkline(score, level) {
+  const heights = [2,2,3,3,4,5,6,7,8,9,10,10].map(h => Math.round(h * score / 100));
+  const color = { hot: '#dc2626', rising: '#d97706', steady: '#16a34a' }[level] || '#888';
+  return heights.map((h, i) => {
+    const isLit = i >= heights.length - Math.max(2, Math.floor(score / 15));
+    return `<div class="spark-bar${isLit ? ' lit' : ''}" style="height:${Math.max(3, h * 2.2)}px;${isLit ? `background:${color}` : ''}" aria-hidden="true"></div>`;
+  }).join('');
+}
+
+function formatDate(ev) {
+  const d = ev.date?.display || ev.date?.start;
+  if (!d) return '';
+  try {
+    if (typeof d === 'string' && d.length <= 12) {
+      return new Date(d + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+    return new Date(d).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  } catch { return d; }
+}
+
+function renderCard(ev) {
+  const date = formatDate(ev);
+  const location = [ev.location?.suburb, ev.location?.name].filter(Boolean).join(' · ') || '';
+  const hosts = ev.hosts?.slice(0, 2).join(', ') || '';
+  const talking = ev.talkingCount > 0 ? ev.talkingCount.toLocaleString() : '—';
+  const posts = ev.postCount > 0 ? ev.postCount.toLocaleString() : '—';
+  const sourceBadges = [...new Set((ev.sources || []).map(s => s.name))].slice(0, 3)
+    .map(s => `<span class="badge badge-source">${s}</span>`).join('');
+
+  const trendColor = { hot: '#dc2626', rising: '#d97706', steady: '#16a34a' }[ev.trendLevel] || '#888';
+
+  const sent = ev.sentiment || { positive: 70, neutral: 25, negative: 5 };
+  const sentPos = Math.round(sent.positive || 70);
+  const sentNeu = Math.round(sent.neutral || 25);
+  const sentNeg = Math.round(sent.negative || 5);
+
+  const commentsHtml = (ev.comments || []).slice(0, 3).map(c =>
+    `<div class="comment"><span class="comment-user">${escHtml(c.user || 'user')}</span><span>${escHtml(c.text || '')}</span></div>`
+  ).join('');
+
+  return `
+  <article class="event-card">
+    ${ev.imageUrl
+      ? `<img class="card-image" src="${escHtml(ev.imageUrl)}" alt="${escHtml(ev.name)}" loading="lazy" onerror="this.style.display='none'">`
+      : `<div class="card-image-placeholder"><i class="ti ti-calendar-event" aria-hidden="true"></i></div>`
+    }
+    <div class="card-body">
+      <div class="card-top">
+        <h2 class="event-name">
+          ${ev.url
+            ? `<a href="${escHtml(ev.url)}" target="_blank" rel="noopener">${escHtml(ev.name)}</a>`
+            : escHtml(ev.name)
+          }
+        </h2>
+      </div>
+      <div class="badges">
+        ${catBadge(ev.category)}
+        ${trendBadge(ev.trendLevel, ev.trendLabel)}
+        ${ev.isFree ? '<span class="badge badge-free"><i class="ti ti-ticket" aria-hidden="true"></i>Free</span>' : ''}
+      </div>
+      <div class="card-meta">
+        ${date ? `<div class="meta-item"><i class="ti ti-calendar" aria-hidden="true"></i><span>${escHtml(date)}</span></div>` : ''}
+        ${location ? `<div class="meta-item"><i class="ti ti-map-pin" aria-hidden="true"></i><span>${escHtml(location)}</span></div>` : ''}
+        ${hosts ? `<div class="meta-item meta-full"><i class="ti ti-user" aria-hidden="true"></i><span>${escHtml(hosts)}</span></div>` : ''}
+      </div>
+
+      <hr class="card-divider">
+
+      <div class="stats-row">
+        <div class="stat"><i class="ti ti-users" aria-hidden="true"></i><strong>${talking}</strong>&nbsp;talking</div>
+        <div class="stat"><i class="ti ti-photo" aria-hidden="true"></i><strong>${posts}</strong>&nbsp;posts</div>
+        <div class="stat"><i class="ti ti-database" aria-hidden="true"></i><strong>${ev.sourceCount || new Set((ev.sources||[]).map(s=>s.name)).size}</strong>&nbsp;sources</div>
+      </div>
+
+      <div class="trend-row">
+        <div class="trend-header"><span>Activity trend</span><span class="trend-score">${ev.trendScore}/100</span></div>
+        <div class="trend-bar-bg"><div class="trend-bar-fill" style="width:${ev.trendScore}%;background:${trendColor}"></div></div>
+      </div>
+      <div class="sparkline" aria-hidden="true">${sparkline(ev.trendScore, ev.trendLevel)}</div>
+
+      <div class="sentiment-header">
+        <span>Sentiment</span>
+        <span class="sent-pos-label">${sentPos}% positive</span>
+      </div>
+      <div class="sentiment-bar">
+        <div class="sent-pos" style="width:${sentPos}%"></div>
+        <div class="sent-neu" style="width:${sentNeu}%"></div>
+        <div class="sent-neg" style="width:${sentNeg}%"></div>
+      </div>
+      <div class="sent-legend">
+        <div class="sent-item"><div class="sent-dot" style="background:#22c55e"></div>${sentPos}% positive</div>
+        <div class="sent-item"><div class="sent-dot" style="background:#d1d5db"></div>${sentNeu}% neutral</div>
+        <div class="sent-item"><div class="sent-dot" style="background:#f87171"></div>${sentNeg}% negative</div>
+      </div>
+
+      ${commentsHtml ? `<hr class="card-divider"><div class="comments">${commentsHtml}</div>` : ''}
+
+      <div class="card-sources">${sourceBadges}</div>
+    </div>
+  </article>`;
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Render events ─────────────────────────────────────────────────────────────
+function renderEvents(events) {
+  const grid = document.getElementById('events-grid');
+  const empty = document.getElementById('empty-state');
+  const loading = document.getElementById('loading-grid');
+
+  loading.style.display = 'none';
+
+  if (!events.length) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('empty-msg').textContent =
+      state.search ? `No events matching "${state.search}"` : 'No events found. The agent may still be crawling — try refreshing in a moment.';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
+  grid.innerHTML = events.map(renderCard).join('');
+}
+
+// ─── Render stats ──────────────────────────────────────────────────────────────
+function renderStats(stats, updatedAt) {
+  if (stats) {
+    document.getElementById('s-total').textContent = (stats.totalEvents || 0).toLocaleString();
+    document.getElementById('s-talking').textContent = (stats.totalTalking || 0).toLocaleString();
+    document.getElementById('s-hot').textContent = (stats.hotCount || 0).toLocaleString();
+    document.getElementById('s-weekend').textContent = (stats.thisWeekend || 0).toLocaleString();
+    document.getElementById('s-free').textContent = (stats.freeCount || 0).toLocaleString();
+    document.getElementById('s-sources').textContent = `${stats.sources?.ok || 0}/${stats.sources?.total || 50}`;
+
+    // Update filter counts
+    const cats = stats.categories || {};
+    const total = stats.totalEvents || 0;
+    document.getElementById('cnt-all').textContent = total;
+    ['music','food','art','market','sport','film','culture','wellness','tech','education'].forEach(c => {
+      const el = document.getElementById(`cnt-${c}`);
+      if (el) el.textContent = cats[c] || 0;
+    });
+
+    // Populate suburb select
+    if (stats.topSuburbs?.length) {
+      const sel = document.getElementById('suburb-select');
+      while (sel.options.length > 1) sel.remove(1);
+      stats.topSuburbs.forEach(([suburb]) => {
+        const opt = document.createElement('option');
+        opt.value = suburb;
+        opt.textContent = suburb;
+        sel.appendChild(opt);
+      });
+    }
+  }
+
+  if (updatedAt) {
+    const d = new Date(updatedAt);
+    const diff = Math.round((Date.now() - d) / 60000);
+    const label = diff < 1 ? 'just now' : diff < 60 ? `${diff}m ago` : `${Math.round(diff/60)}h ago`;
+    document.getElementById('last-updated').innerHTML =
+      `<span class="live-dot"></span>Updated ${label}`;
+  }
+}
+
+// ─── Render source panel ───────────────────────────────────────────────────────
+function renderSources(sources) {
+  const grid = document.getElementById('source-grid');
+  const countEl = document.getElementById('sources-ok-count');
+  const ok = sources.filter(s => s.ok).length;
+  const total = sources.length;
+  countEl.textContent = `${ok}/${total} live`;
+  document.getElementById('source-count').textContent = `${total} sources`;
+
+  grid.innerHTML = sources.map(s => {
+    const cls = s.ok ? 'ok' : (s.ok === false ? 'fail' : 'pending');
+    const icon = s.ok ? 'ti-check' : (s.ok === false ? 'ti-x' : 'ti-clock');
+    const count = s.count != null ? ` (${s.count})` : '';
+    return `<div class="source-item ${cls}"><i class="ti ${icon}" aria-hidden="true"></i>${escHtml(s.name)}${count}</div>`;
+  }).join('');
+}
+
+// ─── Load all data ─────────────────────────────────────────────────────────────
+async function load(showLoadingState = true) {
+  if (showLoadingState) {
+    document.getElementById('loading-grid').style.display = 'grid';
+    document.getElementById('events-grid').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'none';
+  }
+
+  const [evData, stats, sources] = await Promise.all([
+    fetchEvents(),
+    fetchStats(),
+    fetchSources(),
+  ]);
+
+  state.allEvents = evData.events || [];
+  state.stats = stats;
+  state.sources = sources;
+
+  renderStats(stats, evData.updatedAt);
+  renderEvents(state.allEvents);
+  if (sources.length) renderSources(sources);
+}
+
+// ─── Event listeners ───────────────────────────────────────────────────────────
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('[data-cat]');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.cat = btn.dataset.cat;
+  load(false);
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort = e.target.value;
+  load(false);
+});
+
+document.getElementById('suburb-select').addEventListener('change', e => {
+  state.suburb = e.target.value;
+  load(false);
+});
+
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.search = e.target.value.trim();
+    load(false);
+  }, 300);
+});
+
+document.getElementById('refresh-btn').addEventListener('click', async () => {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  await load(true);
+  btn.classList.remove('spinning');
+});
+
+document.getElementById('toggle-sources-btn').addEventListener('click', () => {
+  state.sourcePanelOpen = !state.sourcePanelOpen;
+  document.getElementById('source-panel').style.display = state.sourcePanelOpen ? 'block' : 'none';
+  document.getElementById('toggle-sources-btn').setAttribute('aria-expanded', state.sourcePanelOpen);
+  if (state.sourcePanelOpen && state.sources.length) renderSources(state.sources);
+});
+
+// Auto-refresh every 5 minutes
+setInterval(() => load(false), 5 * 60 * 1000);
+
+// Initial load
+load();
+</script>
+</body>
+</html>
