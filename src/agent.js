@@ -6,6 +6,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { normalize } = require('./normalizer');
 const { deduplicate } = require('./deduplicator');
 const { scoreAll } = require('./scorer');
+const { enrichEvents } = require('./enricher');
 const { saveEvents, saveState } = require('./store');
 
 const apiSources = require('./sources/apiSources');
@@ -233,30 +234,6 @@ Return JSON only: {"positive": number, "neutral": number, "negative": number} (m
   } catch { return { positive: 70, neutral: 25, negative: 5 }; }
 }
 
-// ─── Reddit mention scanner ────────────────────────────────────────────────────
-// Searches Sydney-focused subreddits for an event name to capture organic discussion.
-// Called for the top 30 events after main crawl — rate-limited to 3 concurrent.
-const redditLimit = pLimit(3);
-
-async function scanRedditMentions(eventName) {
-  try {
-    const words = eventName.split(/\s+/).slice(0, 4).join(' ');
-    const res = await axios.get('https://www.reddit.com/r/sydney+sydneymusic+sydneysocialclub+australia/search.json', {
-      params: { q: words, sort: 'relevance', t: 'month', limit: 10 },
-      headers: { 'User-Agent': 'FOMO-Sydney/1.0 (event discovery)' },
-      timeout: 7000,
-    });
-    const posts = (res.data?.data?.children || [])
-      .map(p => p.data)
-      .filter(p => p.title.toLowerCase().includes(words.split(' ')[0].toLowerCase()));
-    return {
-      redditMentions: posts.length,
-      redditScore:    posts.reduce((s, p) => s + (p.score || 0), 0),
-      redditComments: posts.reduce((s, p) => s + (p.num_comments || 0), 0),
-    };
-  } catch { return { redditMentions: 0, redditScore: 0, redditComments: 0 }; }
-}
-
 // ─── Velocity calculator ────────────────────────────────────────────────────────
 // Compares this crawl's source counts against the previous crawl.
 // Returns a 0–1 score: 1 = event doubled its sources since last crawl.
@@ -319,25 +296,12 @@ async function crawl() {
     ev.velocityScore = velocityScore(ev.name, srcCount, prevMap);
   }
 
-  // Score and rank
-  const scored = scoreAll(deduped);
+  // Social signal enrichment — Spotify, Last.fm, Reddit (multi-subreddit), Wikipedia
+  // Enriches top 300 upcoming events; results cached for 14h to avoid re-fetching
+  const enriched = await enrichEvents(deduped);
 
-  // Reddit mention scanning for top 30 events (rate-limited)
-  console.log('[Agent] Scanning Reddit mentions for top 30 events…');
-  await Promise.all(scored.slice(0, 30).map(ev =>
-    redditLimit(async () => {
-      const reddit = await scanRedditMentions(ev.name);
-      ev.rawSignals = { ...(ev.rawSignals || {}), ...reddit };
-      // Re-apply reddit signals to socialScore (lightweight re-score for these events)
-      if (reddit.redditMentions > 0) {
-        ev.socialScore = Math.min(100, ev.socialScore + reddit.redditMentions * 3 + Math.min(10, reddit.redditComments));
-        ev.trendScore  = ev.socialScore;
-        if (reddit.redditMentions >= 3) ev.trendLevel = 'hot';
-        else if (reddit.redditMentions >= 1 && ev.trendLevel === 'steady') ev.trendLevel = 'rising';
-      }
-    })
-  ));
-  console.log('[Agent] Reddit scanning complete');
+  // Score and rank using all social signals
+  const scored = scoreAll(enriched);
 
   // LLM enrichment on top 20 events (rate-limit conscious)
   if (anthropic) {
@@ -347,10 +311,6 @@ async function crawl() {
       ev.sentiment = await llmSentiment(ev.name, ev.comments.map(c => c.text));
     }
   }
-
-  // Re-sort after Reddit enrichment
-  scored.sort((a, b) => b.socialScore - a.socialScore);
-  scored.forEach((ev, i) => { ev.socialRank = i + 1; });
 
   // Save results
   const output = {
